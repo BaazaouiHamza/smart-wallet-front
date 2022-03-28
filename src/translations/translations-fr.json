@@ -1,0 +1,13 @@
+{
+  "personalSettings": "Paramètres personnels",
+  "companySettings": "Paramètres de l'organisation",
+  "logout": "Se déconnecter",
+
+  "WEB_WALLET": "Portefeuille",
+  "MARKETPLACE": "Marché",
+  "PROSPERBILL": "Factures",
+  "DASHBOARD": "Tableau de bord",
+  "BACKOFFICE": "BackOffice",
+
+  "dashboard": "Tableau de bord"
+}

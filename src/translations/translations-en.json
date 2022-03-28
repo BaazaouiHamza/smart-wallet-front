@@ -1,0 +1,13 @@
+{
+  "personalSettings": "Personal settings",
+  "companySettings": "Organization settings",
+  "logout": "Logout",
+
+  "WEB_WALLET": "Wallets",
+  "MARKETPLACE": "Marketplace",
+  "PROSPERBILL": "Bills",
+  "DASHBOARD": "Dashboard",
+  "BACKOFFICE": "BackOffice",
+
+  "dashboard": "Dashboard"
+}
