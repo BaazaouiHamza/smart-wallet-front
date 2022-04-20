@@ -5,7 +5,6 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import reduxSaga from 'redux-saga'
 import * as effects from 'redux-saga/effects'
 
-import * as dashboard from './Dashboard'
 import * as notifications from './Notifications'
 
 import {
@@ -17,7 +16,7 @@ import {
   NotRequested,
 } from '@library/react-toolkit'
 
-export type Actions = dashboard.Actions | notifications.Actions | ProsperusActions
+export type Actions = notifications.Actions | ProsperusActions
 
 const sagaMiddleware = reduxSaga()
 export const history = createBrowserHistory({ basename: '/web-wallet' })
@@ -25,7 +24,6 @@ export const history = createBrowserHistory({ basename: '/web-wallet' })
 // This is our global application state
 export type State = {
   // Our application state lives here
-  dashboard: dashboard.State
   notifications: notifications.State
   // The router state
   router: RouterState
@@ -42,7 +40,6 @@ declare module 'react-redux' {
 // Here we create our store by combining all the different modules' reducers.
 const store = createStore(
   combineReducers<State>({
-    dashboard: dashboard.reducer,
     notifications: notifications.reducer,
     router: connectRouter(history),
     prosperus: (s, a) =>
@@ -76,7 +73,6 @@ function* rootSaga() {
   yield effects.fork(initSaga)
   yield effects.all([
     // This is where we register all our application's sagas
-    dashboard.saga(),
     prosperusSaga(),
   ])
 }

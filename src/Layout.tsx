@@ -4,11 +4,10 @@ import * as React from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch } from 'react-router'
 import styled from 'styled-components'
-
+import { RtpsList } from './RtpsList'
 import { State } from './store'
-
-import Dashboard from './Dashboard'
 import NavMenu from './NavMenu'
+import { CreateRtp } from './CreateRtp'
 
 const FullRedirect = styled.div`
   height: calc(100% - ${(props) => props.theme.footerHeight}px);
@@ -45,7 +44,10 @@ const MainLayout = () => {
       </Header>
       <Layout.Content style={{ padding: '0 50px', marginTop: 48, marginBottom: 48 }}>
         <Switch>
-          <Route path="/" exact={true} component={Dashboard} />
+          <Route path="/rtpList" exact={true} component={RtpsList} />
+          <Route path="/rtp/add">
+            <CreateRtp />
+          </Route>
         </Switch>
       </Layout.Content>
     </Layout>

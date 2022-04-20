@@ -8,6 +8,7 @@
   "PROSPERBILL": "Factures",
   "DASHBOARD": "Tableau de bord",
   "BACKOFFICE": "BackOffice",
-
-  "dashboard": "Tableau de bord"
+  "RtpsList" : "Politiques de transaction de routine",
+  "dashboard": "Tableau de bord",
+  "Rtpadd":"Créer une politique de transaction de routine"
 }

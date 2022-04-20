@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { matchPath } from 'react-router'
 import styled from 'styled-components'
 import { TranslatedMessage } from './translations/data'
+import { NavLink } from 'react-router-dom'
 
 const Nav = styled(Menu)`
   width: 500px;
@@ -56,11 +57,15 @@ const NavMenu = () => {
       selectedKeys={[page]}
       onSelect={({ key }) => (key === 'dashboard' ? dispatch(push('/')) : undefined)}
     >
-      <Menu.Item key="dashboard">
-        <TranslatedMessage id="dashboard" />
+      <Menu.Item key="RtpsList">
+        <NavLink to="/rtpList">
+          <TranslatedMessage id="RtpsList" />
+        </NavLink>
       </Menu.Item>
-      <Menu.Item key="other">
-        <TranslatedMessage id="dashboard" />
+      <Menu.Item key="CreateRtp">
+        <NavLink to="/rtp/add">
+          <TranslatedMessage id="Rtpadd" />
+        </NavLink>
       </Menu.Item>
     </Nav>
   )

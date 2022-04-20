@@ -8,6 +8,7 @@
   "PROSPERBILL": "Bills",
   "DASHBOARD": "Dashboard",
   "BACKOFFICE": "BackOffice",
-
-  "dashboard": "Dashboard"
+  "RtpsList" : "Routine Transaction Policies",
+  "dashboard": "Dashboard",
+  "Rtpadd":"Create Routine Transaction Policy"
 }
