@@ -8,6 +8,7 @@ import { RtpsList } from './RtpsList'
 import { State } from './store'
 import NavMenu from './NavMenu'
 import { CreateRtp } from './CreateRtp'
+import { UpdateRtp } from './UpdateRtp'
 
 const FullRedirect = styled.div`
   height: calc(100% - ${(props) => props.theme.footerHeight}px);
@@ -47,6 +48,9 @@ const MainLayout = () => {
           <Route path="/rtpList" exact={true} component={RtpsList} />
           <Route path="/rtp/add">
             <CreateRtp />
+          </Route>
+          <Route path="/rtp/update/:id">
+              <UpdateRtp/>
           </Route>
         </Switch>
       </Layout.Content>

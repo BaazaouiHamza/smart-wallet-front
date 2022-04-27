@@ -1,37 +1,42 @@
 import { useUnits } from '@library/react-toolkit'
-import { Form, Input, Button, Select, DatePicker, InputNumber, Spin } from 'antd'
+import { Form, Input, Button, Select, InputNumber, Spin } from 'antd'
 import React, { FC, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import { RoutineTransactionPolicy } from '../types'
 
 interface props {
   onFormSubmit: (data: any) => Promise<void>
   isLoading: boolean
+  defaultValues:any
 }
 
-export const RtpForm: FC<props> = ({ onFormSubmit, isLoading }) => {
+export const RtpForm: FC<props> = ({defaultValues ,onFormSubmit, isLoading }) => {
   const [amountInput, setAmount] = useState(0)
   const [unitId, setUnitId] = useState('')
-
-  // function disabledStartDate(current) {
-  //   // Can not select days before today and today
-  //   return current && current.valueOf() < Date.now()
-  // }
-  // const { Option } = Select
+  const currentDate = new Date()
   const units = useUnits()
-  const { control, handleSubmit } = useForm()
-  const dateFormatList = ['YYYY-MM-DD', 'YY-MM-DD']
+  console.log('units', units)
+  const {
+    watch,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RoutineTransactionPolicy>({defaultValues})
+  const watchFields = watch('schedule_start_date')
+  console.log('watch', watchFields)
   const onSubmit = handleSubmit((data) => {
     // console.log(data)
     // console.log(amount)
     // console.log(unitId)
     let amount = {}
     amount[unitId] = amountInput
+
     data = {
       ...data,
       amount,
     }
     onFormSubmit(data)
-    // console.log(data)
+    console.log(data)
   })
 
   // Object.keys(units).map((unit) =>
@@ -60,81 +65,113 @@ export const RtpForm: FC<props> = ({ onFormSubmit, isLoading }) => {
           name="name"
           defaultValue=""
           control={control}
-          render={({ field: { onChange, value } }) => <Input onChange={onChange} value={value} />}
+          rules={{
+            required: 'Name is required',
+            minLength: { value: 3, message: 'Min length is 3' },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <Input status={errors.name && 'error'} onChange={onChange} value={value} />
+          )}
         />
-        {/* <Input {...register('name')} name="name" /> */}
+        <p>{errors.name?.message}</p>
       </Form.Item>
-      <Form.Item
-        rules={[{ required: true, message: 'Please input Description' }]}
-        label="description"
-        tooltip="This is a required field"
-      >
+      <Form.Item label="description" tooltip="This is a required field">
         <Controller
           name="description"
-          defaultValue=""
           control={control}
+          rules={{
+            required: 'Description is required',
+            minLength: { value: 6, message: 'Min length is 6 charachters' },
+          }}
           render={({ field: { onChange, value } }) => (
-            <Input.TextArea onChange={onChange} value={value} />
+            <Input.TextArea
+              status={errors.description && 'error'}
+              onChange={onChange}
+              value={value}
+            />
           )}
         />
+        <p>{errors.description?.message}</p>
       </Form.Item>
-      <Form.Item
-        htmlFor="schedule_start_date"
-        label="Schedueled Start Date"
-        tooltip="This is a required field"
-      >
+      <Form.Item label="Schedueled Start Date">
         <Controller
           name="schedule_start_date"
-          defaultValue=""
           control={control}
+          rules={{
+            required: 'Schedueled Start Date is required',
+            validate: {
+              value: (startDate) =>
+                Date.parse(startDate) > Date.parse(currentDate.toString())
+                  ? true
+                  : 'Start Date must be after today',
+            },
+          }}
           render={({ field: { onChange, value } }) => (
-            <DatePicker onChange={onChange} value={value} format={dateFormatList} />
+            <Input
+              status={errors.schedule_start_date && 'error'}
+              type="date"
+              onChange={onChange}
+              value={value}
+            />
           )}
         />
+        <p>{errors.schedule_start_date?.message}</p>
       </Form.Item>
-      <Form.Item label="Schedueled End Date" tooltip="This is a required field">
+      <Form.Item label="Schedueled End Date">
         <Controller
           name="schedule_end_date"
-          defaultValue=""
           control={control}
+          rules={{
+            required: 'Schedueled End Date is required',
+            validate: {
+              value: (endDate) =>
+                Date.parse(endDate) > Date.parse(watchFields)
+                  ? true
+                  : 'End Date must be after start Date',
+            },
+          }}
           render={({ field: { onChange, value } }) => (
-            <DatePicker onChange={onChange} value={value} format={dateFormatList} />
+            <Input
+              status={errors.schedule_end_date && 'error'}
+              type="date"
+              onChange={onChange}
+              value={value}
+            />
           )}
         />
+        <p>{errors.schedule_end_date?.message}</p>
       </Form.Item>
-      <Form.Item rules={[{ required: true, message: 'Please pick a Frequency' }]} label="Frequency">
+      <Form.Item label="Frequency">
         <Controller
           name="frequency"
-          defaultValue=""
           control={control}
           render={({ field: { onChange, value } }) => (
             <Select onChange={onChange} value={value}>
+              <Select.Option value="DAILY">DAILY</Select.Option>
               <Select.Option value="WEEKLY">WEEKLY</Select.Option>
               <Select.Option value="MONTHLY">MONTHLY</Select.Option>
-              <Select.Option value="YEARLY">YEARLY</Select.Option>
             </Select>
           )}
         />
       </Form.Item>
-      <Form.Item label="Unit">
-        <Select onChange={(e) => setUnitId(e)}>
-          {Object.keys(units).map((unit) => (
-            <Select.Option value={unit} key={unit}>
-              {units[unit].name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+
       <Form.Item label="Amount">
-        <InputNumber onChange={(e) => setAmount(parseInt(e.toString()))} />
+        <InputNumber
+          onChange={(e) => setAmount(parseInt(e.toString()))}
+          addonAfter={
+            <Select onChange={(e) => setUnitId(e)}>
+              {Object.keys(units).map((unit) => (
+                <Select.Option value={unit} key={unit}>
+                  {units[unit].name}
+                </Select.Option>
+              ))}
+            </Select>
+          }
+        />
       </Form.Item>
-      {/* <Form.Item label="Amount">
-        <InputAmount />
-      </Form.Item> */}
       <Form.Item label="Nym Id" required tooltip="This is a required field">
         <Controller
           name="nym_id"
-          defaultValue=""
           control={control}
           render={({ field: { onChange, value } }) => (
             <Input placeholder="input placeholder" onChange={onChange} value={value} />
@@ -144,12 +181,18 @@ export const RtpForm: FC<props> = ({ onFormSubmit, isLoading }) => {
       <Form.Item label="Recipient" required tooltip="This is a required field">
         <Controller
           name="recipient"
-          defaultValue=""
           control={control}
+          rules={{ required: 'Recipient is required' }}
           render={({ field: { onChange, value } }) => (
-            <Input placeholder="input placeholder" onChange={onChange} value={value} />
+            <Input
+              status={errors.recipient && 'error'}
+              placeholder="input placeholder"
+              onChange={onChange}
+              value={value}
+            />
           )}
         />
+        <p>{errors.recipient?.message}</p>
       </Form.Item>
       <Form.Item>
         <Button htmlType="submit" type="primary">
