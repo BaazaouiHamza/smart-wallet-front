@@ -1,14 +1,17 @@
-import { useUnits, getDCNNym } from '@library/react-toolkit'
+import { useUnits, getDCNNym, NymSelect } from '@library/react-toolkit'
 import { Button, Spin, Table } from 'antd'
 import React from 'react'
 import { RoutineTransactionPolicy } from '../types'
 import { useQueryClient } from 'react-query'
 // import { getRtps } from '../api'
-import { useDeleteRtp, useGetRtpsList } from './queries'
+import { useDeleteRtp, useGetRtpsList, useRoutineTransactionPolicies } from './queries'
 import { ColumnsType } from 'antd/lib/table'
 // import { useMutation, useQueryClient } from 'react-query'
 // import { deleteRtp } from '../api'
 import { useHistory } from 'react-router'
+import { pipe } from 'fp-ts/lib/function'
+import { record } from 'fp-ts'
+
 export const RtpsList: React.FC = () => {
   const history = useHistory()
   const nymId = 'BjsvbVTryg2EVjPXM4Sin9d11tTGvgG1dEMA58hdCu4x'
@@ -16,7 +19,10 @@ export const RtpsList: React.FC = () => {
   console.log(units)
   const dcnNymID = getDCNNym()
   console.log('NymID', dcnNymID)
-  const { data, isLoading, isError } = useGetRtpsList(nymId, { page: 1, itemsPerPage: 10 })
+  const { data, isLoading, isError } = useRoutineTransactionPolicies(nymId, {
+    page: 1,
+    itemsPerPage: 10,
+  })
   // const { data, isLoading, isError } = useQuery<any, Error>(['rtps', { nymId }], getRtps)
   // console.log(data?.data[9].Amount)
   // data?.data.map((rtp) => console.log(Object.keys(rtp).flatMap(r=>Object(obj[k]) === obj[k]
@@ -27,15 +33,16 @@ export const RtpsList: React.FC = () => {
   // }
   const queryClient = useQueryClient()
   // const { mutateAsync, isLoading: loadingDelete } = useMutation(deleteRtp)
-  const {mutateAsync,isLoading:loadingDelete} = useDeleteRtp()
+  const { mutateAsync, isLoading: loadingDelete } = useDeleteRtp()
   const remove = async (id: number) => {
-    await mutateAsync(id)
+    await mutateAsync(id, {})
     queryClient.invalidateQueries('rtps')
   }
   const updateRoute = (id: number) => {
     let path = `/rtp/update/${id}`
     history.push(path)
   }
+
   const columns: ColumnsType<RoutineTransactionPolicy> = [
     {
       title: 'Name',
@@ -52,7 +59,16 @@ export const RtpsList: React.FC = () => {
       dataIndex: 'amount',
       key: 'amount',
       render: (_, item) => (
-        <span>{Object.values(item.amount ?? ({} as Record<string, number>))}</span>
+        <span>
+          {pipe(
+            item.amount,
+            record.collect((unitID, value) => (
+              <div key={unitID}>
+                {unitID} {value}
+              </div>
+            ))
+          )}
+        </span>
       ),
     },
     {
@@ -81,8 +97,8 @@ export const RtpsList: React.FC = () => {
       key: 'x',
       render: (_, item) => (
         <>
-          <Button onClick={() => remove(item.id)} type="primary">
-            {loadingDelete ? <Spin size="default" /> : 'Delete'}
+          <Button loading={loadingDelete} onClick={() => remove(item.id)} type="primary">
+            Delete
           </Button>
           <Button onClick={() => updateRoute(item.id)} type="link">
             Update
@@ -92,14 +108,17 @@ export const RtpsList: React.FC = () => {
     },
   ]
   console.log(data)
-  if (isLoading) {
-    ;<Spin size="default" />
-  }
+
   if (isError) {
     return <span>Error:something went wrong</span>
   }
 
   return (
-    <Table size={'small'} loading={isLoading} columns={columns} dataSource={data?.data}></Table>
+    <Table
+      size="small"
+      loading={isLoading}
+      columns={columns}
+      dataSource={data?.data.map((o) => ({ key: o.id, ...o }))}
+    />
   )
 }

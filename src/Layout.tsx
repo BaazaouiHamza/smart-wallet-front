@@ -50,7 +50,7 @@ const MainLayout = () => {
             <CreateRtp />
           </Route>
           <Route path="/rtp/update/:id">
-              <UpdateRtp/>
+            <UpdateRtp />
           </Route>
         </Switch>
       </Layout.Content>
