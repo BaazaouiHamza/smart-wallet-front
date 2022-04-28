@@ -1,4 +1,5 @@
 import * as t from 'io-ts'
+import { DateFromISOString } from 'io-ts-types'
 
 export type PaginationRequest = {
   page: number
@@ -6,19 +7,19 @@ export type PaginationRequest = {
 }
 export const RoutineTransactionPolicy = t.type({
   id: t.number,
-  amount: t.union([t.record(t.string,t.number),t.undefined,t.null ]),
+  amount: t.record(t.string, t.number),
   name: t.string,
   description: t.string,
-  schedule_end_date: t.string,
-  schedule_start_date: t.string,
-  nym_id: t.string,
+  scheduleEndDate: DateFromISOString,
+  scheduleStartDate: DateFromISOString,
+  nymID: t.string,
   recipient: t.string,
-  frequency: t.string,
+  frequency: t.union([t.literal('DAILY'), t.literal('WEEKLY'), t.literal('MONTHLY')]),
 })
- 
-export type RoutineTransactionPolicy= t.TypeOf<typeof RoutineTransactionPolicy>
+
+export type RoutineTransactionPolicy = t.TypeOf<typeof RoutineTransactionPolicy>
 
 export const TransactionPolicies = t.type({
-  total:t.number,
-  data : t.array(RoutineTransactionPolicy)
+  total: t.number,
+  data: t.array(RoutineTransactionPolicy),
 })

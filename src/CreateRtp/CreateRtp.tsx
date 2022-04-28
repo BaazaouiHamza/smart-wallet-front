@@ -8,7 +8,7 @@ export const CreateRtp: React.FC = () => {
   const history = useHistory()
 
   // const { mutateAsync, isLoading } = useMutation(postRtp)
-  const {mutateAsync,isLoading} = usePostRtp()
+  const { mutateAsync, isLoading } = usePostRtp()
   const onFormSubmit = async (data) => {
     await mutateAsync({ ...data })
     history.push('/rtpList')
@@ -17,7 +17,7 @@ export const CreateRtp: React.FC = () => {
   return (
     <>
       <h2>Create Routine Transaction Policy</h2>
-      <RtpForm defaultValues={""} onFormSubmit={onFormSubmit} isLoading={isLoading} />
+      <RtpForm onSubmit={onFormSubmit} isLoading={isLoading} />
     </>
   )
 }

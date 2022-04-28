@@ -8,23 +8,26 @@ export const getRtps = (nymId: string, req: PaginationRequest) =>
     decoder: TransactionPolicies,
   })
 
-export const removeRtp = (id: string) => {
-  return axios.delete_(`/smart-wallet/api/userPolicy/${id}`, { decoder: unknown })
-}
+export const removeRtp = (id: string) =>
+  axios.delete_(`/smart-wallet/api/userPolicy/${id}`, { decoder: unknown })
 
 export const getRtp = (id: number) =>
   axios.get(`/smart-wallet/api/policy/routineTransactionPolicy/${id}`, {
     decoder: RoutineTransactionPolicy,
   })
-export const createRtp = ({ ...data }) =>
-  axios.post(`/smart-wallet/api/policy/routineTransactionPolicy`, data, {
+
+export const createRtp = (rtp: RoutineTransactionPolicy) =>
+  axios.post(`/smart-wallet/api/policy/routineTransactionPolicy`, rtp, {
     decoder: unknown,
+    encoder: RoutineTransactionPolicy,
   })
-export const updateRtp = ({ id, ...data }) =>
+
+export const updateRtp = ({ id, ...data }: RoutineTransactionPolicy) =>
   axios.put(`/smart-wallet/api/policy/routineTransactionPolicy/${id}`, data, {
     decoder: unknown,
   })
-export const deleteRtp = (id) =>
+
+export const deleteRtp = (id: number) =>
   axios.delete_(`/smart-wallet/api/userPolicy/${id}`, {
     decoder: unknown,
   })
