@@ -1,5 +1,6 @@
-import { useUnits } from '@library/react-toolkit'
+import { useUnits, NymSelect} from '@library/react-toolkit'
 import { Form, Input, Button, Select, InputNumber, DatePicker } from 'antd'
+import moment from 'moment'
 import React, { FC } from 'react'
 import { TranslatedMessage } from '../translations/data'
 import { RoutineTransactionPolicy } from '../types'
@@ -12,12 +13,19 @@ type Props = {
   initialValues?: RoutineTransactionPolicyWithoutID
 }
 
-export const RtpForm: FC<Props> = ({ initialValues, onSubmit, isLoading }) => {
+export const RtpForm: FC<Props> = ({ onSubmit, isLoading }) => {
   const [endDate, setEndDate] = React.useState<Date>()
   const [_startDate, setStartDate] = React.useState<Date>()
   const currentDate = new Date()
   const units = useUnits()
-
+  const dateFormat = "YYYY/MM/DD";
+  // const initScheduelStartDate = moment(initialValues?.scheduleStartDate)
+  // const initScheduelEndDate = moment(initialValues?.scheduleEndDate)
+  // const init = {
+  //   scheduleStartDate:initScheduelStartDate,
+  //   scheduleEndDate:initScheduelEndDate,
+  //   ...initialValues
+  // }
   return (
     <Form<{
       name: string
@@ -28,9 +36,8 @@ export const RtpForm: FC<Props> = ({ initialValues, onSubmit, isLoading }) => {
       amount: number
       unitID: string
       nymID: string
-      recipient: string
+      recipient: any
     }>
-      initialValues={initialValues}
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       autoComplete="off"
@@ -38,12 +45,13 @@ export const RtpForm: FC<Props> = ({ initialValues, onSubmit, isLoading }) => {
         setEndDate(vs.scheduleEndDate?.toDate())
         setStartDate(vs.scheduleStartDate?.toDate())
       }}
-      onFinish={({ scheduleEndDate, scheduleStartDate, amount, unitID, ...rest }) => {
+      onFinish={({ scheduleEndDate, scheduleStartDate, amount, unitID, recipient, ...rest }) => {
         onSubmit({
           ...rest,
           amount: { [unitID]: amount },
           scheduleStartDate: scheduleStartDate.toDate(),
           scheduleEndDate: scheduleEndDate.toDate(),
+          recipient: recipient.nym,
         })
       }}
     >
@@ -87,10 +95,10 @@ export const RtpForm: FC<Props> = ({ initialValues, onSubmit, isLoading }) => {
         label="Schedueled Start Date"
         name="scheduleStartDate"
       >
-        <DatePicker />
+        <DatePicker  format={dateFormat} />
       </Form.Item>
       <Form.Item label="Schedueled End Date" name="scheduleEndDate">
-        <DatePicker />
+        <DatePicker format={dateFormat} />
       </Form.Item>
       <Form.Item name="frequency" label="Frequency">
         <Select>
@@ -114,13 +122,16 @@ export const RtpForm: FC<Props> = ({ initialValues, onSubmit, isLoading }) => {
           }
         />
       </Form.Item>
-      <Form.Item name="nymID" label="Nym Id" required tooltip="This is a required field">
+      {/* <Form.Item name="nymID" label="Nym Id" required tooltip="This is a required field">
         <Input placeholder="input placeholder" />
+      </Form.Item> */}
+      <Form.Item name="recipient" label="Recipient">
+        <NymSelect />
       </Form.Item>
       <Form.Item
-        rules={[{ required: true, message: 'Recipient is required' }]}
-        name="recipient"
-        label="Recipient"
+        rules={[{ required: true, message: 'nymId is required' }]}
+        name="nymID"
+        label="Sender"
         required
         tooltip="This is a required field"
       >

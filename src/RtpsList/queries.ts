@@ -1,5 +1,5 @@
 import { pipe } from 'fp-ts/lib/function'
-import { getRtp, getRtps, createRtp, updateRtp, deleteRtp } from './api'
+import { getRtp, getRtps, updateRtp, deleteRtp, addRtp,createRtp } from './api'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { taskEither, task, either } from 'fp-ts'
 import { PaginationRequest, RoutineTransactionPolicy } from '../types'
@@ -13,18 +13,27 @@ export const throwLeft: <L, R>(ma: taskEither.TaskEither<L, R>) => task.Task<R> 
   )
 )
 
-export const useRoutineTransactionPolicies = (nymID: string, req: PaginationRequest) =>
+export const useGetRoutineTransactionPolicies = (nymID: string, req: PaginationRequest) =>
   useQuery(['rtps', nymID, req.page, req.itemsPerPage], pipe(getRtps(nymID, req), throwLeft), {
     keepPreviousData: true,
   })
 
-export const useRoutineTransactionPolicy = (id: number) =>
+export const useGetRoutineTransactionPolicyById = (id: number) =>
   useQuery(['rtp', id], pipe(getRtp(id), throwLeft))
 
 export const useAddRoutineTransactionPolicy = () => {
   const queryClient = useQueryClient()
 
   return useMutation((data: RoutineTransactionPolicy) => pipe(createRtp(data), throwLeft)(), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('rtps')
+    },
+  })
+}
+export const useCreateRoutineTransactionPolicy = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation((data: RoutineTransactionPolicy) => pipe(addRtp(data), throwLeft)(), {
     onSuccess: () => {
       queryClient.invalidateQueries('rtps')
     },

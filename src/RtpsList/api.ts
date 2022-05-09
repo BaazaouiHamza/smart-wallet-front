@@ -21,6 +21,12 @@ export const createRtp = (rtp: RoutineTransactionPolicy) =>
     decoder: unknown,
     encoder: RoutineTransactionPolicy,
   })
+export const addRtp = ({...data}:RoutineTransactionPolicy) => 
+    axios.post(`/smart-wallet/api/${data.nymID}/routine-transaction-policy`, data, {
+      decoder: unknown,
+      encoder:RoutineTransactionPolicy
+    })
+  
 
 export const updateRtp = ({ id, ...data }: RoutineTransactionPolicy) =>
   axios.put(`/smart-wallet/api/policy/routineTransactionPolicy/${id}`, data, {

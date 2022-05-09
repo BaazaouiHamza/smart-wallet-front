@@ -10,5 +10,9 @@
   "BACKOFFICE": "BackOffice",
   "RtpsList" : "Politiques de transaction de routine",
   "dashboard": "Tableau de bord",
-  "Rtpadd":"Créer une politique de transaction de routine"
+  "Rtpadd":"Créer une politique de transaction de routine",
+  "name":"nom",
+  "nameMinError":"La longueur minimale du nom est de 3 caractères",
+  "nameInputPrompt":"Le nom est requis",
+  "asset":"actif"
 }

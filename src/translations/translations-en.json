@@ -10,5 +10,9 @@
   "BACKOFFICE": "BackOffice",
   "RtpsList" : "Routine Transaction Policies",
   "dashboard": "Dashboard",
-  "Rtpadd":"Create Routine Transaction Policy"
+  "Rtpadd":"Create Routine Transaction Policy",
+  "name":"name",
+  "nameMinError":"Min length of name is 3 charachters",
+  "nameInputPrompt":"Name is required",
+  "asset":"asset"
 }
