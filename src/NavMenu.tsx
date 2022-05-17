@@ -63,8 +63,8 @@ const NavMenu = () => {
         </NavLink>
       </Menu.Item>
       <Menu.Item key="CreateRtp">
-        <NavLink to="/rtp/add">
-          <TranslatedMessage id="Rtpadd" />
+        <NavLink to="/ttpList">
+            Transaction Trigger Policy
         </NavLink>
       </Menu.Item>
     </Nav>

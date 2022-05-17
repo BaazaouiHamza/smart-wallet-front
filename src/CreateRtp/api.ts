@@ -5,4 +5,3 @@ export const createRtp = ({ ...data }) => {
     decoder: RoutineTransactionPolicy,
   })
 }
-

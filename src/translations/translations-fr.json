@@ -11,8 +11,12 @@
   "RtpsList" : "Politiques de transaction de routine",
   "dashboard": "Tableau de bord",
   "Rtpadd":"Créer une politique de transaction de routine",
-  "name":"nom",
+  "name":"Nom",
+  "ttp":"Politique de déclenchement de transaction",
   "nameMinError":"La longueur minimale du nom est de 3 caractères",
+  "descriptionMinError":"La longueur minimale du description est de 6 caractères",
   "nameInputPrompt":"Le nom est requis",
+  "descriptionInputPrompt":"Description est requis",
   "asset":"actif"
+
 }

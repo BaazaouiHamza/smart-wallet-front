@@ -1,11 +1,17 @@
-import { useUnits, NymSelect} from '@library/react-toolkit'
-import { Form, Input, Button, Select, InputNumber, DatePicker } from 'antd'
+import { NymSelect, useOrganizationPermissions } from '@library/react-toolkit'
+import { Form, Input, Button, Select, DatePicker } from 'antd'
 import moment from 'moment'
 import React, { FC } from 'react'
 import { TranslatedMessage } from '../translations/data'
 import { RoutineTransactionPolicy } from '../types'
+import { AmountInput } from './AmountInput'
+import { NymSenderSelect } from './NymSenderSelect'
 
 type RoutineTransactionPolicyWithoutID = Omit<RoutineTransactionPolicy, 'id'>
+// type ConvertDatesToMoment<T> = {
+//   [K in keyof T]: T[K] extends Date ? moment.Moment : T[K]
+// }
+// type RTPWithMoment = ConvertDatesToMoment<RoutineTransactionPolicyWithoutID>
 
 type Props = {
   onSubmit: (data: RoutineTransactionPolicyWithoutID) => void
@@ -17,15 +23,9 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading }) => {
   const [endDate, setEndDate] = React.useState<Date>()
   const [_startDate, setStartDate] = React.useState<Date>()
   const currentDate = new Date()
-  const units = useUnits()
-  const dateFormat = "YYYY/MM/DD";
-  // const initScheduelStartDate = moment(initialValues?.scheduleStartDate)
-  // const initScheduelEndDate = moment(initialValues?.scheduleEndDate)
-  // const init = {
-  //   scheduleStartDate:initScheduelStartDate,
-  //   scheduleEndDate:initScheduelEndDate,
-  //   ...initialValues
-  // }
+  const dateFormat = 'YYYY/MM/DD'
+  const orgPermission = useOrganizationPermissions()
+  console.log(orgPermission?.walletPermissions)
   return (
     <Form<{
       name: string
@@ -95,7 +95,7 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading }) => {
         label="Schedueled Start Date"
         name="scheduleStartDate"
       >
-        <DatePicker  format={dateFormat} />
+        <DatePicker format={dateFormat} />
       </Form.Item>
       <Form.Item label="Schedueled End Date" name="scheduleEndDate">
         <DatePicker format={dateFormat} />
@@ -107,36 +107,11 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading }) => {
           <Select.Option value="MONTHLY">MONTHLY</Select.Option>
         </Select>
       </Form.Item>
-      <Form.Item name="amount" label="Amount">
-        <InputNumber
-          addonAfter={
-            <Form.Item name="unitID" label={<TranslatedMessage id="asset" />}>
-              <Select>
-                {Object.keys(units).map((unit) => (
-                  <Select.Option value={unit} key={unit}>
-                    {units[unit].name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          }
-        />
-      </Form.Item>
-      {/* <Form.Item name="nymID" label="Nym Id" required tooltip="This is a required field">
-        <Input placeholder="input placeholder" />
-      </Form.Item> */}
+      <AmountInput />
       <Form.Item name="recipient" label="Recipient">
         <NymSelect />
       </Form.Item>
-      <Form.Item
-        rules={[{ required: true, message: 'nymId is required' }]}
-        name="nymID"
-        label="Sender"
-        required
-        tooltip="This is a required field"
-      >
-        <Input />
-      </Form.Item>
+      <NymSenderSelect />
       <Form.Item>
         <Button loading={isLoading} htmlType="submit" type="primary">
           Submit

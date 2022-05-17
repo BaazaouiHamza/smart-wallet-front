@@ -11,8 +11,11 @@
   "RtpsList" : "Routine Transaction Policies",
   "dashboard": "Dashboard",
   "Rtpadd":"Create Routine Transaction Policy",
-  "name":"name",
+  "name":"Name",
+  "ttp":"Transaction Trigger Policy",
   "nameMinError":"Min length of name is 3 charachters",
+  "descriptionMinError":"Min length of description is 6 charachters",
   "nameInputPrompt":"Name is required",
+  "descriptionInputPrompt":"Description is required",
   "asset":"asset"
 }

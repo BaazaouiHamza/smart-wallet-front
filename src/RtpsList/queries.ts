@@ -1,5 +1,13 @@
 import { pipe } from 'fp-ts/lib/function'
-import { getRtp, getRtps, updateRtp, deleteRtp, addRtp,createRtp } from './api'
+import {
+  getRtp,
+  getRtps,
+  updateRtp,
+  deleteRtp,
+  addRtp,
+  createRtp,
+  getGetOrganisationWallets,
+} from './api'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { taskEither, task, either } from 'fp-ts'
 import { PaginationRequest, RoutineTransactionPolicy } from '../types'
@@ -15,6 +23,11 @@ export const throwLeft: <L, R>(ma: taskEither.TaskEither<L, R>) => task.Task<R> 
 
 export const useGetRoutineTransactionPolicies = (nymID: string, req: PaginationRequest) =>
   useQuery(['rtps', nymID, req.page, req.itemsPerPage], pipe(getRtps(nymID, req), throwLeft), {
+    keepPreviousData: true,
+  })
+
+export const useGetOrganisationWallets = (org?: string) =>
+  useQuery(['orgWallets', org], pipe(getGetOrganisationWallets(org), throwLeft), {
     keepPreviousData: true,
   })
 

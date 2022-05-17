@@ -152,7 +152,7 @@ module.exports = function (app) {
       onProxyReq: async (proxyReq, req) => {
         // console.log(req.cookies)
         // console.log(req.headers.cookie)
-       console.log(req.headers.cookie.split(";")[0].slice(13))
+       console.log(req.headers.cookie.split(";")[0].slice("access_token"))
         const accessToken = req.headers.cookie.split(";")[0].slice(13)
         if (accessToken) {
           proxyReq.setHeader('Authorization', `Bearer ${accessToken}`)

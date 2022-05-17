@@ -1,49 +1,46 @@
-import { Button, Table } from 'antd'
-import React, {useState } from 'react'
-import { RoutineTransactionPolicy } from '../types'
-import { useQueryClient } from 'react-query'
-import { useDeleteRoutineTransactionPolicy, useGetRoutineTransactionPolicies } from './queries'
 import { ColumnsType } from 'antd/lib/table'
+import React, { useState } from 'react'
 import { pipe } from 'fp-ts/lib/function'
 import { record } from 'fp-ts'
-import { UpdateRtpModal } from '../UpdateRtp/updateRtpModal'
+import { TransactionTriggerPolicy } from '~/src/types/TransactionTriggerPolicy'
+import { Button, Table } from 'antd'
+import {
+  useDeleteTransactionTriggerPolicy,
+  useGetTransactionTriggerPolicies,
+} from '~/src/CustomHooks/TransactionTriggerPolicyQueries/queries'
 import { useUnits } from '@library/react-toolkit'
+import { useQueryClient } from 'react-query'
+import { ModalUpdateTransactionTriggerPolicy } from './ModalUpdateTransactionTriggerPolicy'
 
 type Props = {
   nymId: string
 }
 
-export const RtpsList: React.FC<Props> = ({ nymId }) => {
- const units = useUnits()
+export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
+  const units = useUnits()
   const [showUpdateModal, setShowUpateModal] = useState<boolean>(false)
   const [page, setPage] = useState(1)
-  const { data, isLoading, isError } = useGetRoutineTransactionPolicies(nymId, {
+  const { data, isLoading, isError } = useGetTransactionTriggerPolicies(nymId, {
     page: page,
     itemsPerPage: 5,
   })
-  // const unitName = data?.data.map((policy) => units[Object.keys(policy.amount)[0]].name)
+  const { mutateAsync, isLoading: loadingDelete } = useDeleteTransactionTriggerPolicy()
   const queryClient = useQueryClient()
-  const { mutateAsync, isLoading: loadingDelete } = useDeleteRoutineTransactionPolicy()
-  const remove = async (id: number) => {
-    await mutateAsync(id, {})
-    queryClient.invalidateQueries('rtps')
+  const remove = async (nymID: string, id: number) => {
+    await mutateAsync({ nymID, id }, {})
+    queryClient.invalidateQueries('ttps')
   }
-
-  const columns: ColumnsType<RoutineTransactionPolicy> = [
-    {
-      title:"ID",
-      dataIndex:"id",
-      key:"id"
-    },
+  console.log(units)
+  const columns: ColumnsType<TransactionTriggerPolicy> = [
     {
       title: 'Name',
       dataIndex: 'name',
-      key: 'name',
+      key: 'Name',
     },
     {
       title: 'Description',
       dataIndex: 'description',
-      key: 'description',
+      key: 'Description',
     },
     {
       title: 'Amount',
@@ -55,7 +52,7 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
             item.amount,
             record.collect((unitID, value) => (
               <div key={unitID}>
-                {value}  {units[unitID]?.name}
+                {value} {units[unitID]?.name}
               </div>
             ))
           )}
@@ -63,9 +60,21 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
       ),
     },
     {
-      title: 'Frequence',
-      dataIndex: 'frequency',
-      key: 'frequency',
+      title: 'Targeted Balance',
+      dataIndex: 'targetedBalance',
+      key: 'targetedBalance',
+      render: (_, item) => (
+        <span>
+          {pipe(
+            item.targetedBalance,
+            record.collect((unitID, value) => (
+              <div key={unitID}>
+                {value} {units[unitID]?.name}
+              </div>
+            ))
+          )}
+        </span>
+      ),
     },
     {
       title: 'Recipient',
@@ -73,22 +82,16 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
       key: 'recipient',
     },
     {
-      title: 'Start Date',
-      dataIndex: 'scheduleStartDate',
-      key: 'schedule_start_date',
-    },
-    {
-      title: 'End Date',
-      dataIndex: 'scheduleEndDate',
-      key: 'schedule_end_date',
-    },
-    {
       title: 'Action',
       dataIndex: '',
       key: 'x',
       render: (_, item) => (
         <>
-          <Button loading={loadingDelete} onClick={() => remove(item.id)} type="primary">
+          <Button
+            loading={loadingDelete}
+            onClick={() => remove(item.nymID, item.id)}
+            type="primary"
+          >
             Delete
           </Button>
           <Button
@@ -98,7 +101,8 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
           >
             Update
           </Button>
-          <UpdateRtpModal
+          <ModalUpdateTransactionTriggerPolicy
+            nymID={item.nymID}
             id={item.id}
             showUpdateModal={showUpdateModal}
             setShowUpdateModal={setShowUpateModal}
@@ -107,7 +111,6 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
       ),
     },
   ]
-  console.log(data)
 
   if (isError) {
     return <span>Error:something went wrong</span>
@@ -118,8 +121,8 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
       <Table
         size="small"
         loading={isLoading}
-        columns={columns}
         dataSource={data?.data.map((o) => ({ key: o.id, ...o }))}
+        columns={columns}
         pagination={{
           total: data?.total,
           pageSize: 5,
