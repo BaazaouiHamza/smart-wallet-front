@@ -1,3 +1,4 @@
+import { getReq } from './../../types/TransactionTriggerPolicy';
 import { useQueryClient, useMutation, useQuery } from 'react-query'
 import { taskEither, task, either } from 'fp-ts'
 import { pipe } from 'fp-ts/lib/function'
@@ -7,14 +8,10 @@ import {
   deleteTransactionTriggerPolicy,
   getTransacionTriggerPolicies,
   updateTransactionTriggerPolicy,
-  getransactionTriggerPolicyById
+  getransactionTriggerPolicyById,
 } from './api'
 import { PaginationRequest } from '~/src/types'
 
-type deleteReq = {
-  id:number
-  nymID:string
-}
 
 export const throwLeft: <L, R>(ma: taskEither.TaskEither<L, R>) => task.Task<R> = task.map(
   either.fold(
@@ -66,12 +63,11 @@ export const useDeleteTransactionTriggerPolicy = () => {
   const queryClient = useQueryClient()
 
   return useMutation(
-    ({nymID,id}:deleteReq) =>
-      pipe(deleteTransactionTriggerPolicy(nymID,id), throwLeft)(),
+    (data:getReq) => pipe(deleteTransactionTriggerPolicy(data), throwLeft)(),
     {
-      onSuccess: (_, id) => {
+      onSuccess: (_, d) => {
         queryClient.invalidateQueries('ttps')
-        queryClient.invalidateQueries(['ttps', id])
+        queryClient.invalidateQueries(['ttps', d.id])
       },
     }
   )

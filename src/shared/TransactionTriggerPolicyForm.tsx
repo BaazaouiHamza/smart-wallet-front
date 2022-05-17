@@ -1,5 +1,5 @@
 import { NymSelect, useUnits } from '@library/react-toolkit'
-import { Form, Input, InputNumber, Select,Button } from 'antd'
+import { Form, Input, InputNumber, Select, Button } from 'antd'
 import React, { FC } from 'react'
 import { TranslatedMessage } from '../translations/data'
 import { TransactionTriggerPolicy } from '../types/TransactionTriggerPolicy'
@@ -10,11 +10,12 @@ type TransactionTriggerPolicyWithoutId = Omit<TransactionTriggerPolicy, 'id'>
 
 type Props = {
   onSubmit: (data: TransactionTriggerPolicyWithoutId) => void
-  isLoading:boolean
-  initialValues?:any
+  isLoading: boolean
+  initialValues?: TransactionTriggerPolicyWithoutId
 }
 
-export const TransactionTriggerPolicyForm: FC<Props> = ({ onSubmit,isLoading,initialValues }) => {
+export const TransactionTriggerPolicyForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
+  const [form] = Form.useForm()
   const units = useUnits()
   return (
     <Form<{
@@ -30,17 +31,17 @@ export const TransactionTriggerPolicyForm: FC<Props> = ({ onSubmit,isLoading,ini
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       autoComplete="off"
-      onFinish={({ amount, unitID, targetedBalance, balanceUnitID,recipient, ...rest }) => {
+      onFinish={({ amount, unitID, targetedBalance, balanceUnitID, recipient, ...rest }) => {
         onSubmit({
           ...rest,
           amount: { [unitID]: amount },
           targetedBalance: { [balanceUnitID]: targetedBalance },
-          recipient:recipient.nym
+          recipient: recipient.nym,
         })
       }}
-      initialValues={initialValues}
     >
       <Form.Item
+        initialValue={initialValues?.name}
         label={<TranslatedMessage id="name" />}
         name="name"
         rules={[
@@ -52,6 +53,7 @@ export const TransactionTriggerPolicyForm: FC<Props> = ({ onSubmit,isLoading,ini
         <Input placeholder="Policy name" />
       </Form.Item>
       <Form.Item
+        initialValue={initialValues?.description}
         label="description"
         tooltip="This is a required field"
         name="description"
@@ -62,11 +64,23 @@ export const TransactionTriggerPolicyForm: FC<Props> = ({ onSubmit,isLoading,ini
       >
         <Input.TextArea placeholder="Description" />
       </Form.Item>
-      <AmountInput />
-      <Form.Item name="targetedBalance" label="Targeted Balance">
+      <AmountInput initialValue={initialValues?.amount} />
+      <Form.Item
+        name="targetedBalance"
+        label="Targeted Balance"
+        initialValue={
+          initialValues?.targetedBalance ? Object.values(initialValues?.targetedBalance)[0] : ''
+        }
+      >
         <InputNumber
           addonAfter={
-            <Form.Item name="balanceUnitID" label={<TranslatedMessage id="asset" />}>
+            <Form.Item
+              name="balanceUnitID"
+              label={<TranslatedMessage id="asset" />}
+              initialValue={
+                initialValues?.targetedBalance ? Object.keys(initialValues?.targetedBalance)[0] : ''
+              }
+            >
               <Select>
                 {Object.keys(units).map((unit) => (
                   <Select.Option value={unit} key={unit}>
@@ -78,19 +92,19 @@ export const TransactionTriggerPolicyForm: FC<Props> = ({ onSubmit,isLoading,ini
           }
         />
       </Form.Item>
-      <NymSenderSelect />
+      <NymSenderSelect initialValue={initialValues?.nymID} />
       <Form.Item
         name="recipient"
         label="Recipient"
-        rules={[{ required: true,message:"Recipient is required" }]}
+        rules={[{ required: true, message: 'Recipient is required' }]}
       >
         <NymSelect />
-        </Form.Item>
-        <Form.Item>
-          <Button loading={isLoading} htmlType="submit" type="primary">
-            Submit
-          </Button>
-        </Form.Item>
+      </Form.Item>
+      <Form.Item>
+        <Button onClick={()=>form.resetFields} loading={isLoading} htmlType="submit" type="primary">
+          Submit
+        </Button>
+      </Form.Item>
     </Form>
   )
 }

@@ -1,9 +1,13 @@
 import { useOrganization } from '@library/react-toolkit'
-import { Select, Spin,Form } from 'antd'
-import React from 'react'
+import { Select, Spin, Form } from 'antd'
+import React, { FC } from 'react'
 import { useGetOrganisationWallets } from '../RtpsList/queries'
 
-export const NymSenderSelect = () => {
+type Props = {
+  initialValue?: string
+}
+
+export const NymSenderSelect: FC<Props> = ({ initialValue: nymSender }) => {
   const org = useOrganization()
   console.log(org?.name)
   const { data, isLoading, isError } = useGetOrganisationWallets(org?.name)
@@ -15,19 +19,20 @@ export const NymSenderSelect = () => {
   }
   return (
     <Form.Item
-    rules={[{ required: true, message: 'nymId is required' }]}
-    name="nymID"
-    label="Sender"
-    required
-    tooltip="This is a required field"
-  >
-    <Select>
-      {data.data.map((wallet) => (
-        <Select.Option value={wallet.nym} key={wallet.nym}>
-          {wallet.firstName}
-        </Select.Option>
-      ))}
-    </Select>
-    </Form.Item >
+      initialValue={nymSender}
+      rules={[{ required: true, message: 'nymId is required' }]}
+      name="nymID"
+      label="Sender"
+      required
+      tooltip="This is a required field"
+    >
+      <Select>
+        {data.data.map((wallet) => (
+          <Select.Option value={wallet.nym} key={wallet.nym}>
+            {wallet.firstName}
+          </Select.Option>
+        ))}
+      </Select>
+    </Form.Item>
   )
 }

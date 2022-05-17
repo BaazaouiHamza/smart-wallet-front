@@ -19,18 +19,20 @@ type Props = {
 export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
   const units = useUnits()
   const [showUpdateModal, setShowUpateModal] = useState<boolean>(false)
+  const [updateId, setUpdateId] = useState(0)
+  const [updateNymID, setUpdateNymID] = useState('')
   const [page, setPage] = useState(1)
   const { data, isLoading, isError } = useGetTransactionTriggerPolicies(nymId, {
     page: page,
     itemsPerPage: 5,
   })
+  console.log(data?.data)
   const { mutateAsync, isLoading: loadingDelete } = useDeleteTransactionTriggerPolicy()
   const queryClient = useQueryClient()
   const remove = async (nymID: string, id: number) => {
     await mutateAsync({ nymID, id }, {})
     queryClient.invalidateQueries('ttps')
   }
-  console.log(units)
   const columns: ColumnsType<TransactionTriggerPolicy> = [
     {
       title: 'Name',
@@ -86,7 +88,7 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
       dataIndex: '',
       key: 'x',
       render: (_, item) => (
-        <>
+        <div key={item.id}>
           <Button
             loading={loadingDelete}
             onClick={() => remove(item.nymID, item.id)}
@@ -97,17 +99,13 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
           <Button
             onClick={() => {
               setShowUpateModal(true)
+              setUpdateId(item.id)
+              setUpdateNymID(item.nymID)
             }}
           >
             Update
           </Button>
-          <ModalUpdateTransactionTriggerPolicy
-            nymID={item.nymID}
-            id={item.id}
-            showUpdateModal={showUpdateModal}
-            setShowUpdateModal={setShowUpateModal}
-          />
-        </>
+        </div>
       ),
     },
   ]
@@ -118,6 +116,14 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
 
   return (
     <>
+      {showUpdateModal && (
+        <ModalUpdateTransactionTriggerPolicy
+          nymID={updateNymID}
+          id={updateId}
+          showUpdateModal={showUpdateModal}
+          setShowUpdateModal={setShowUpateModal}
+        />
+      )}
       <Table
         size="small"
         loading={isLoading}

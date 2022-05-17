@@ -63,9 +63,7 @@ const NavMenu = () => {
         </NavLink>
       </Menu.Item>
       <Menu.Item key="CreateRtp">
-        <NavLink to="/ttpList">
-            Transaction Trigger Policy
-        </NavLink>
+        <NavLink to="/ttpList">Transaction Trigger Policy</NavLink>
       </Menu.Item>
     </Nav>
   )

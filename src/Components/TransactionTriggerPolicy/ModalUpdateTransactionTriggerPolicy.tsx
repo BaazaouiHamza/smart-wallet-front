@@ -19,7 +19,7 @@ export const ModalUpdateTransactionTriggerPolicy: FC<props> = ({
   id,
   nymID,
 }) => {
-  const { isError, isLoading, data } = useGetTransactionTriggerPolicyById(nymID,id)
+  const { isError, isLoading, data } = useGetTransactionTriggerPolicyById(nymID, id)
   const { mutate, isLoading: isMutating } = useUpdateTransactionTriggerPolicy()
   const onFormSubmit = async (formData) => {
     mutate({ ...formData, id })
@@ -38,7 +38,11 @@ export const ModalUpdateTransactionTriggerPolicy: FC<props> = ({
       visible={showUpdateModal}
       onCancel={() => setShowUpdateModal(false)}
     >
-      <TransactionTriggerPolicyForm initialValues={data} isLoading={isMutating} onSubmit={onFormSubmit} />
+      <TransactionTriggerPolicyForm
+        initialValues={data}
+        isLoading={isMutating}
+        onSubmit={onFormSubmit}
+      />
     </Modal>
   )
 }

@@ -1,5 +1,5 @@
 import { Button, Table } from 'antd'
-import React, {useState } from 'react'
+import React, { useState } from 'react'
 import { RoutineTransactionPolicy } from '../types'
 import { useQueryClient } from 'react-query'
 import { useDeleteRoutineTransactionPolicy, useGetRoutineTransactionPolicies } from './queries'
@@ -8,13 +8,14 @@ import { pipe } from 'fp-ts/lib/function'
 import { record } from 'fp-ts'
 import { UpdateRtpModal } from '../UpdateRtp/updateRtpModal'
 import { useUnits } from '@library/react-toolkit'
+import moment from 'moment'
 
 type Props = {
   nymId: string
 }
 
 export const RtpsList: React.FC<Props> = ({ nymId }) => {
- const units = useUnits()
+  const units = useUnits()
   const [showUpdateModal, setShowUpateModal] = useState<boolean>(false)
   const [page, setPage] = useState(1)
   const { data, isLoading, isError } = useGetRoutineTransactionPolicies(nymId, {
@@ -30,11 +31,6 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
   }
 
   const columns: ColumnsType<RoutineTransactionPolicy> = [
-    {
-      title:"ID",
-      dataIndex:"id",
-      key:"id"
-    },
     {
       title: 'Name',
       dataIndex: 'name',
@@ -55,7 +51,7 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
             item.amount,
             record.collect((unitID, value) => (
               <div key={unitID}>
-                {value}  {units[unitID]?.name}
+                {value} {units[unitID]?.name}
               </div>
             ))
           )}
@@ -76,11 +72,13 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
       title: 'Start Date',
       dataIndex: 'scheduleStartDate',
       key: 'schedule_start_date',
+      render: (value) => <span>{moment(value).format('MMM Do YY, h:mm:ss a').toString()}</span>,
     },
     {
       title: 'End Date',
       dataIndex: 'scheduleEndDate',
       key: 'schedule_end_date',
+      render: (value) => <span>{moment(value).format('MMM Do YY, h:mm:ss a').toString()}</span>,
     },
     {
       title: 'Action',

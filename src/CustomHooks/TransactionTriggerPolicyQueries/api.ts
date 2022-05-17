@@ -2,7 +2,7 @@ import { TransactionTriggerPolicies } from './../../types/TransactionTriggerPoli
 import { PaginationRequest } from './../../types/Rtp'
 import { unknown } from 'io-ts'
 import * as axios from '~/src/axios'
-import { TransactionTriggerPolicy } from '~/src/types/TransactionTriggerPolicy'
+import { TransactionTriggerPolicy,getReq } from '~/src/types/TransactionTriggerPolicy'
 
 export const addTransactionTriggerPolicy = ({ ...data }: TransactionTriggerPolicy) =>
   axios.post(`/smart-wallet/api/${data.nymID}/transaction-trigger-policy`, data, {
@@ -16,7 +16,7 @@ export const getTransacionTriggerPolicies = (nymID: string, req: PaginationReque
     decoder: TransactionTriggerPolicies,
   })
 
-export const deleteTransactionTriggerPolicy = (nymID: string, id: number) =>
+export const deleteTransactionTriggerPolicy = ({nymID,id}:getReq) =>
   axios.delete_(`/smart-wallet/api/${nymID}/transaction-trigger-policy/${id}`, { decoder: unknown })
 
 export const getransactionTriggerPolicyById = (nymID: string, id: number) =>

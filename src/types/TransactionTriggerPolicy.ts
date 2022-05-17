@@ -11,7 +11,16 @@ export const TransactionTriggerPolicy = t.type({
 })
 export type TransactionTriggerPolicy = t.TypeOf<typeof TransactionTriggerPolicy>
 
+export const Amount = t.record(t.string,t.number)
+
+export type Amount = t.TypeOf<typeof Amount>
+
 export const TransactionTriggerPolicies = t.type({
   total: t.number,
   data: t.array(TransactionTriggerPolicy),
 })
+
+export type getReq = {
+  id: number
+  nymID: string
+}

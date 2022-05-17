@@ -1,16 +1,16 @@
-import { Spin, Collapse,Button} from 'antd'
+import { Spin, Collapse, Button } from 'antd'
 import React, { useState } from 'react'
 import { useGetOrganisationWallets } from './queries'
 import { AddRtpModal } from '../CreateRtp/addRtpModal'
 import { useOrganization } from '@library/react-toolkit'
 import { RtpsList } from './RtpsList'
 
-export const ShowRoutineTransactionPolicies:React.FC = () => {
+export const ShowRoutineTransactionPolicies: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState<boolean>(false)
   const { Panel } = Collapse
   const org = useOrganization()
   const { data, isLoading, isError } = useGetOrganisationWallets(org?.name)
-    console.log(data)
+  console.log(data)
   if (isError) {
     return <p>Something went Wrong</p>
   }
@@ -25,15 +25,17 @@ export const ShowRoutineTransactionPolicies:React.FC = () => {
         onClick={() => {
           setShowAddModal(true)
         }}
-      > Add RTp
+      >
+        {' '}
+        Add RTp
       </Button>
       <AddRtpModal showAddModal={showAddModal} setShowAddModal={setShowAddModal} />
-      <Collapse >
-      {data.data.map((wallet) => (
-              <Panel header={wallet.firstName} key={wallet.nym}>
-               <RtpsList nymId={wallet.nym}/>
-              </Panel>
-            ))}
+      <Collapse>
+        {data.data.map((wallet) => (
+          <Panel header={wallet.firstName} key={wallet.nym}>
+            <RtpsList nymId={wallet.nym} />
+          </Panel>
+        ))}
       </Collapse>
     </div>
   )

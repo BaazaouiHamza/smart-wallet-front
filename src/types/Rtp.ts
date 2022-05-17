@@ -11,7 +11,7 @@ export const RoutineTransactionPolicy = t.type({
   name: t.string,
   description: t.string,
   scheduleEndDate: DateFromISOString,
-  scheduleStartDate:  DateFromISOString,
+  scheduleStartDate: DateFromISOString,
   nymID: t.string,
   recipient: t.string,
   frequency: t.union([t.literal('DAILY'), t.literal('WEEKLY'), t.literal('MONTHLY')]),

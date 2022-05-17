@@ -2,7 +2,7 @@ import { any, unknown } from 'io-ts'
 import * as axios from '../axios'
 import { PaginationRequest, TransactionPolicies, RoutineTransactionPolicy } from '../types'
 
-export const getGetOrganisationWallets  = (org?: string) =>
+export const getGetOrganisationWallets = (org?: string) =>
   axios.get(`/api/web-wallet/wallets/${org}`, { decoder: any })
 
 export const getRtps = (nymId: string, req: PaginationRequest) =>

@@ -9,7 +9,7 @@ type props = {
 export const AddRtpModal: FC<props> = ({ showAddModal, setShowAddModal }) => {
   // const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
   // const { mutate, isLoading } = useAddRoutineTransactionPolicy()
-  const { mutate, isLoading } =useCreateRoutineTransactionPolicy()
+  const { mutate, isLoading } = useCreateRoutineTransactionPolicy()
   const onFormSubmit = async (data) => {
     mutate({ ...data })
     setShowAddModal(false)

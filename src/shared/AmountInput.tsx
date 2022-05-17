@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { TranslatedMessage, useUnits } from '@library/react-toolkit'
 import { InputNumber, Select, Form } from 'antd'
+import { Amount } from '../types/TransactionTriggerPolicy'
 
-export const AmountInput = () => {
+type Props = {
+  initialValue?: Amount
+}
+
+export const AmountInput: FC<Props> = ({ initialValue: amount }) => {
   const units = useUnits()
   return (
-    <Form.Item name="amount" label="Amount">
+    <Form.Item name="amount" label="Amount" initialValue={amount ? Object.values(amount)[0] : ''}>
       <InputNumber
         addonAfter={
-          <Form.Item name="unitID" label={<TranslatedMessage id="asset" />}>
+          <Form.Item
+            name="unitID"
+            label={<TranslatedMessage id="asset" />}
+            initialValue={amount ? Object.keys(amount)[0] : ''}
+          >
             <Select>
               {Object.keys(units).map((unit) => (
                 <Select.Option value={unit} key={unit}>
