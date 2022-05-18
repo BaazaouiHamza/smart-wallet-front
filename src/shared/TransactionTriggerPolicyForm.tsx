@@ -101,7 +101,12 @@ export const TransactionTriggerPolicyForm: FC<Props> = ({ onSubmit, isLoading, i
         <NymSelect />
       </Form.Item>
       <Form.Item>
-        <Button onClick={()=>form.resetFields} loading={isLoading} htmlType="submit" type="primary">
+        <Button
+          onClick={() => form.resetFields}
+          loading={isLoading}
+          htmlType="submit"
+          type="primary"
+        >
           Submit
         </Button>
       </Form.Item>

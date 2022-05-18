@@ -29,7 +29,7 @@ export const ModalUpdateTransactionTriggerPolicy: FC<props> = ({
     return <Spin size="large" />
   }
   if (isError) {
-    <p>Something went wrong</p>
+    ;<p>Something went wrong</p>
   }
   return (
     <Modal

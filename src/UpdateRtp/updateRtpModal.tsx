@@ -9,6 +9,7 @@ type props = {
   showUpdateModal: boolean
   setShowUpdateModal: (value: React.SetStateAction<boolean>) => void
   id: number
+  nymID?: string
 }
 export const UpdateRtpModal: FC<props> = ({ showUpdateModal, setShowUpdateModal, id }) => {
   // const [addModalVisible, setAddModalVisible] = useState<boolean>(false);

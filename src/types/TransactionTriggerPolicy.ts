@@ -11,7 +11,7 @@ export const TransactionTriggerPolicy = t.type({
 })
 export type TransactionTriggerPolicy = t.TypeOf<typeof TransactionTriggerPolicy>
 
-export const Amount = t.record(t.string,t.number)
+export const Amount = t.record(t.string, t.number)
 
 export type Amount = t.TypeOf<typeof Amount>
 

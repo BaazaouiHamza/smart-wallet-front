@@ -98,9 +98,9 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
           </Button>
           <Button
             onClick={() => {
-              setShowUpateModal(true)
               setUpdateId(item.id)
               setUpdateNymID(item.nymID)
+              setShowUpateModal(true)
             }}
           >
             Update

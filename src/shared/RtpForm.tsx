@@ -19,7 +19,7 @@ type Props = {
   initialValues?: RoutineTransactionPolicyWithoutID
 }
 
-export const RtpForm: FC<Props> = ({ onSubmit, isLoading }) => {
+export const RtpForm: FC<Props> = ({ onSubmit, isLoading,initialValues }) => {
   const [endDate, setEndDate] = React.useState<Date>()
   const [_startDate, setStartDate] = React.useState<Date>()
   const currentDate = new Date()
@@ -63,10 +63,11 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading }) => {
           { min: 3, message: <TranslatedMessage id="nameMinError" /> },
         ]}
         label={<TranslatedMessage id="name" />}
+        initialValue={initialValues?.name}
       >
         <Input />
       </Form.Item>
-      <Form.Item label="description" tooltip="This is a required field" name="description">
+      <Form.Item initialValue={initialValues?.description} label="description" tooltip="This is a required field" name="description">
         <Input.TextArea />
       </Form.Item>
       <Form.Item
@@ -94,24 +95,25 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading }) => {
         ]}
         label="Schedueled Start Date"
         name="scheduleStartDate"
+        initialValue={moment(initialValues?.scheduleStartDate)}
       >
         <DatePicker format={dateFormat} />
       </Form.Item>
-      <Form.Item label="Schedueled End Date" name="scheduleEndDate">
+      <Form.Item initialValue={moment(initialValues?.scheduleEndDate)} label="Schedueled End Date" name="scheduleEndDate">
         <DatePicker format={dateFormat} />
       </Form.Item>
-      <Form.Item name="frequency" label="Frequency">
+      <Form.Item initialValue={initialValues?.frequency} name="frequency" label="Frequency">
         <Select>
           <Select.Option value="DAILY">DAILY</Select.Option>
           <Select.Option value="WEEKLY">WEEKLY</Select.Option>
           <Select.Option value="MONTHLY">MONTHLY</Select.Option>
         </Select>
       </Form.Item>
-      <AmountInput />
-      <Form.Item name="recipient" label="Recipient">
+      <AmountInput initialValue={initialValues?.amount} />
+      <Form.Item initialValue={initialValues?.recipient} name="recipient" label="Recipient">
         <NymSelect />
       </Form.Item>
-      <NymSenderSelect />
+      <NymSenderSelect initialValue={initialValues?.nymID} />
       <Form.Item>
         <Button loading={isLoading} htmlType="submit" type="primary">
           Submit

@@ -18,6 +18,8 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
   const units = useUnits()
   const [showUpdateModal, setShowUpateModal] = useState<boolean>(false)
   const [page, setPage] = useState(1)
+  const [updateId, setUpdateId] = useState(0)
+  const [updateNymID, setUpdateNymID] = useState('')
   const { data, isLoading, isError } = useGetRoutineTransactionPolicies(nymId, {
     page: page,
     itemsPerPage: 5,
@@ -72,13 +74,13 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
       title: 'Start Date',
       dataIndex: 'scheduleStartDate',
       key: 'schedule_start_date',
-      render: (value) => <span>{moment(value).format('MMM Do YY, h:mm:ss a').toString()}</span>,
+      render: (_,item) => <span>{moment(item.scheduleStartDate).format('MMM Do YY')}</span>,
     },
     {
       title: 'End Date',
       dataIndex: 'scheduleEndDate',
       key: 'schedule_end_date',
-      render: (value) => <span>{moment(value).format('MMM Do YY, h:mm:ss a').toString()}</span>,
+      render: (_,item) => <span>{moment(item.scheduleEndDate).format('MMM Do YY')}</span>,
     },
     {
       title: 'Action',
@@ -91,16 +93,13 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
           </Button>
           <Button
             onClick={() => {
+              setUpdateId(item.id)
+              setUpdateNymID(item.nymID)
               setShowUpateModal(true)
             }}
           >
             Update
           </Button>
-          <UpdateRtpModal
-            id={item.id}
-            showUpdateModal={showUpdateModal}
-            setShowUpdateModal={setShowUpateModal}
-          />
         </>
       ),
     },
@@ -113,6 +112,14 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
 
   return (
     <>
+      {showUpdateModal && (
+        <UpdateRtpModal
+          id={updateId}
+          nymID={updateNymID}
+          showUpdateModal={showUpdateModal}
+          setShowUpdateModal={setShowUpateModal}
+        />
+      )}
       <Table
         size="small"
         loading={isLoading}
