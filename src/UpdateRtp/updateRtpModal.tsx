@@ -9,11 +9,11 @@ type props = {
   showUpdateModal: boolean
   setShowUpdateModal: (value: React.SetStateAction<boolean>) => void
   id: number
-  nymID?: string
+  nymID: string
 }
-export const UpdateRtpModal: FC<props> = ({ showUpdateModal, setShowUpdateModal, id }) => {
+export const UpdateRtpModal: FC<props> = ({ showUpdateModal, setShowUpdateModal, id ,nymID}) => {
   // const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
-  const { isError, isLoading, data } = useGetRoutineTransactionPolicyById(id)
+  const { isError, isLoading, data } = useGetRoutineTransactionPolicyById(nymID,id)
   const { mutate, isLoading: isMutating } = useUpdateRoutineTransactionPolicy()
   const onFormSubmit = async (formData) => {
     mutate({ ...formData, id })

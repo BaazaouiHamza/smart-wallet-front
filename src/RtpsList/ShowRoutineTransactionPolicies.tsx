@@ -10,7 +10,6 @@ export const ShowRoutineTransactionPolicies: React.FC = () => {
   const { Panel } = Collapse
   const org = useOrganization()
   const { data, isLoading, isError } = useGetOrganisationWallets(org?.name)
-  console.log(data)
   if (isError) {
     return <p>Something went Wrong</p>
   }

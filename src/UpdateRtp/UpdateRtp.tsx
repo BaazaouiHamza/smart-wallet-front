@@ -19,8 +19,6 @@ export const UpdateRtp = () => {
     await mutateAsync({ ...formData, id })
     history.push('/rtpList')
   }
-  console.log(data)
-  console.log(id)
   if (isLoading) {
     return <Spin size="large" />
   }

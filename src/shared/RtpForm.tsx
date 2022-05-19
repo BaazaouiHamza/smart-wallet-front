@@ -1,4 +1,4 @@
-import { NymSelect, useOrganizationPermissions } from '@library/react-toolkit'
+import { NymSelect } from '@library/react-toolkit'
 import { Form, Input, Button, Select, DatePicker } from 'antd'
 import moment from 'moment'
 import React, { FC } from 'react'
@@ -19,13 +19,11 @@ type Props = {
   initialValues?: RoutineTransactionPolicyWithoutID
 }
 
-export const RtpForm: FC<Props> = ({ onSubmit, isLoading,initialValues }) => {
+export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
   const [endDate, setEndDate] = React.useState<Date>()
   const [_startDate, setStartDate] = React.useState<Date>()
   const currentDate = new Date()
   const dateFormat = 'YYYY/MM/DD'
-  const orgPermission = useOrganizationPermissions()
-  console.log(orgPermission?.walletPermissions)
   return (
     <Form<{
       name: string
@@ -67,7 +65,12 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading,initialValues }) => {
       >
         <Input />
       </Form.Item>
-      <Form.Item initialValue={initialValues?.description} label="description" tooltip="This is a required field" name="description">
+      <Form.Item
+        initialValue={initialValues?.description}
+        label="description"
+        tooltip="This is a required field"
+        name="description"
+      >
         <Input.TextArea />
       </Form.Item>
       <Form.Item
@@ -99,7 +102,11 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading,initialValues }) => {
       >
         <DatePicker format={dateFormat} />
       </Form.Item>
-      <Form.Item initialValue={moment(initialValues?.scheduleEndDate)} label="Schedueled End Date" name="scheduleEndDate">
+      <Form.Item
+        initialValue={moment(initialValues?.scheduleEndDate)}
+        label="Schedueled End Date"
+        name="scheduleEndDate"
+      >
         <DatePicker format={dateFormat} />
       </Form.Item>
       <Form.Item initialValue={initialValues?.frequency} name="frequency" label="Frequency">

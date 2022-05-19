@@ -8,7 +8,7 @@ import {
   useDeleteTransactionTriggerPolicy,
   useGetTransactionTriggerPolicies,
 } from '~/src/CustomHooks/TransactionTriggerPolicyQueries/queries'
-import { useUnits } from '@library/react-toolkit'
+import { useUnits, useOrganizationPermissions } from '@library/react-toolkit'
 import { useQueryClient } from 'react-query'
 import { ModalUpdateTransactionTriggerPolicy } from './ModalUpdateTransactionTriggerPolicy'
 
@@ -17,7 +17,12 @@ type Props = {
 }
 
 export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
+  let contributor:boolean
   const units = useUnits()
+  const walletPermission = useOrganizationPermissions()?.walletPermissions
+  if (walletPermission) {
+    walletPermission[nymId] === 'CONTRIBUTOR' ? contributor=true : contributor=false
+  }
   const [showUpdateModal, setShowUpateModal] = useState<boolean>(false)
   const [updateId, setUpdateId] = useState(0)
   const [updateNymID, setUpdateNymID] = useState('')
@@ -26,7 +31,6 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
     page: page,
     itemsPerPage: 5,
   })
-  console.log(data?.data)
   const { mutateAsync, isLoading: loadingDelete } = useDeleteTransactionTriggerPolicy()
   const queryClient = useQueryClient()
   const remove = async (nymID: string, id: number) => {
@@ -89,22 +93,26 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
       key: 'x',
       render: (_, item) => (
         <div key={item.id}>
-          <Button
-            loading={loadingDelete}
-            onClick={() => remove(item.nymID, item.id)}
-            type="primary"
-          >
-            Delete
-          </Button>
-          <Button
-            onClick={() => {
-              setUpdateId(item.id)
-              setUpdateNymID(item.nymID)
-              setShowUpateModal(true)
-            }}
-          >
-            Update
-          </Button>
+          {contributor ?  (
+            <>
+              <Button
+                loading={loadingDelete}
+                onClick={() => remove(item.nymID, item.id)}
+                type="primary"
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={() => {
+                  setUpdateId(item.id)
+                  setUpdateNymID(item.nymID)
+                  setShowUpateModal(true)
+                }}
+              >
+                Update
+              </Button>
+            </>
+          ): <span>You are  a viewer of this wallet</span>}
         </div>
       ),
     },

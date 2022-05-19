@@ -9,7 +9,6 @@ type Props = {
 
 export const NymSenderSelect: FC<Props> = ({ initialValue: nymSender }) => {
   const org = useOrganization()
-  console.log(org?.name)
   const { data, isLoading, isError } = useGetOrganisationWallets(org?.name)
   if (isLoading) {
     return <Spin size="default" />

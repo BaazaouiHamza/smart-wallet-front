@@ -7,7 +7,7 @@ import { ColumnsType } from 'antd/lib/table'
 import { pipe } from 'fp-ts/lib/function'
 import { record } from 'fp-ts'
 import { UpdateRtpModal } from '../UpdateRtp/updateRtpModal'
-import { useUnits } from '@library/react-toolkit'
+import { useOrganizationPermissions, useUnits } from '@library/react-toolkit'
 import moment from 'moment'
 
 type Props = {
@@ -16,6 +16,11 @@ type Props = {
 
 export const RtpsList: React.FC<Props> = ({ nymId }) => {
   const units = useUnits()
+  let contributor: boolean
+  const walletPermission = useOrganizationPermissions()?.walletPermissions
+  if (walletPermission) {
+    walletPermission[nymId] === 'CONTRIBUTOR' ? (contributor = true) : (contributor = false)
+  }
   const [showUpdateModal, setShowUpateModal] = useState<boolean>(false)
   const [page, setPage] = useState(1)
   const [updateId, setUpdateId] = useState(0)
@@ -27,8 +32,8 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
   // const unitName = data?.data.map((policy) => units[Object.keys(policy.amount)[0]].name)
   const queryClient = useQueryClient()
   const { mutateAsync, isLoading: loadingDelete } = useDeleteRoutineTransactionPolicy()
-  const remove = async (id: number) => {
-    await mutateAsync(id, {})
+  const remove = async (nymID:string,id: number) => {
+    await mutateAsync({nymID,id}, {})
     queryClient.invalidateQueries('rtps')
   }
 
@@ -74,37 +79,42 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
       title: 'Start Date',
       dataIndex: 'scheduleStartDate',
       key: 'schedule_start_date',
-      render: (_,item) => <span>{moment(item.scheduleStartDate).format('MMM Do YY')}</span>,
+      render: (_, item) => <span>{moment(item.scheduleStartDate).format('MMM Do YY')}</span>,
     },
     {
       title: 'End Date',
       dataIndex: 'scheduleEndDate',
       key: 'schedule_end_date',
-      render: (_,item) => <span>{moment(item.scheduleEndDate).format('MMM Do YY')}</span>,
+      render: (_, item) => <span>{moment(item.scheduleEndDate).format('MMM Do YY')}</span>,
     },
     {
       title: 'Action',
       dataIndex: '',
       key: 'x',
       render: (_, item) => (
-        <>
-          <Button loading={loadingDelete} onClick={() => remove(item.id)} type="primary">
-            Delete
-          </Button>
-          <Button
-            onClick={() => {
-              setUpdateId(item.id)
-              setUpdateNymID(item.nymID)
-              setShowUpateModal(true)
-            }}
-          >
-            Update
-          </Button>
-        </>
+        <div key={item.id}>
+          {contributor ? (
+            <>
+              <Button loading={loadingDelete} onClick={() => remove(item.nymID,item.id)} type="primary">
+                Delete
+              </Button>
+              <Button
+                onClick={() => {
+                  setUpdateId(item.id)
+                  setUpdateNymID(item.nymID)
+                  setShowUpateModal(true)
+                }}
+              >
+                Update
+              </Button>
+            </>
+          ) : (
+            <span>You are a viewer of this wallet</span>
+          )}
+        </div>
       ),
     },
   ]
-  console.log(data)
 
   if (isError) {
     return <span>Error:something went wrong</span>
