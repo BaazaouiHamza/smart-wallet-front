@@ -32,8 +32,8 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
   // const unitName = data?.data.map((policy) => units[Object.keys(policy.amount)[0]].name)
   const queryClient = useQueryClient()
   const { mutateAsync, isLoading: loadingDelete } = useDeleteRoutineTransactionPolicy()
-  const remove = async (nymID:string,id: number) => {
-    await mutateAsync({nymID,id}, {})
+  const remove = async (nymID: string, id: number) => {
+    await mutateAsync({ nymID, id }, {})
     queryClient.invalidateQueries('rtps')
   }
 
@@ -95,7 +95,11 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
         <div key={item.id}>
           {contributor ? (
             <>
-              <Button loading={loadingDelete} onClick={() => remove(item.nymID,item.id)} type="primary">
+              <Button
+                loading={loadingDelete}
+                onClick={() => remove(item.nymID, item.id)}
+                type="primary"
+              >
                 Delete
               </Button>
               <Button

@@ -1,1 +1,1 @@
-export * from './UpdateRtp'
+export * from './updateRtpModal';

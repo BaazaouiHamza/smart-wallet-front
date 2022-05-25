@@ -10,13 +10,19 @@ type Props = {
 export const AmountInput: FC<Props> = ({ initialValue: amount }) => {
   const units = useUnits()
   return (
-    <Form.Item name="amount" label="Amount" initialValue={amount ? Object.values(amount)[0] : ''}>
+    <Form.Item
+      name="amount"
+      label="Amount"
+      initialValue={amount ? Object.values(amount)[0] : ''}
+      rules={[{ required: true, message: 'Amount is required' }]}
+    >
       <InputNumber
         addonAfter={
           <Form.Item
             name="unitID"
             label={<TranslatedMessage id="asset" />}
             initialValue={amount ? Object.keys(amount)[0] : ''}
+            rules={[{ required: true, message: 'Asset is required' }]}
           >
             <Select>
               {Object.keys(units).map((unit) => (

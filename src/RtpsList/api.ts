@@ -1,4 +1,4 @@
-import { getReq } from '~/src/types/TransactionTriggerPolicy';
+import { getReq } from '~/src/types/TransactionTriggerPolicy'
 import { any, unknown } from 'io-ts'
 import * as axios from '../axios'
 import { PaginationRequest, TransactionPolicies, RoutineTransactionPolicy } from '../types'
@@ -15,7 +15,7 @@ export const getRtps = (nymId: string, req: PaginationRequest) =>
 export const removeRtp = (id: string) =>
   axios.delete_(`/smart-wallet/api/user-policy/${id}`, { decoder: unknown })
 
-export const getRtp = (nymID:string,id: number) =>
+export const getRtp = (nymID: string, id: number) =>
   axios.get(`/smart-wallet/api/${nymID}/routine-transaction-policy/${id}`, {
     decoder: RoutineTransactionPolicy,
   })
@@ -36,7 +36,7 @@ export const updateRtp = ({ id, ...data }: RoutineTransactionPolicy) =>
     decoder: unknown,
   })
 
-export const deleteRtp = ({nymID,id}:getReq) =>
+export const deleteRtp = ({ nymID, id }: getReq) =>
   axios.delete_(`/smart-wallet/api/${nymID}/routine-transaction-policy/${id}`, {
     decoder: unknown,
   })

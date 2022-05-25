@@ -71,6 +71,7 @@ export const TransactionTriggerPolicyForm: FC<Props> = ({ onSubmit, isLoading, i
         initialValue={
           initialValues?.targetedBalance ? Object.values(initialValues?.targetedBalance)[0] : ''
         }
+        rules={[{required:true,message:"Targeted Balance is required"}]}
       >
         <InputNumber
           addonAfter={
@@ -80,6 +81,7 @@ export const TransactionTriggerPolicyForm: FC<Props> = ({ onSubmit, isLoading, i
               initialValue={
                 initialValues?.targetedBalance ? Object.keys(initialValues?.targetedBalance)[0] : ''
               }
+              rules={[{required:true,message:"Asset is required"}]}
             >
               <Select>
                 {Object.keys(units).map((unit) => (

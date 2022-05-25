@@ -7,7 +7,6 @@ import styled from 'styled-components'
 import { ShowRoutineTransactionPolicies } from './RtpsList'
 import { State } from './store'
 import NavMenu from './NavMenu'
-import { UpdateRtp } from './UpdateRtp'
 import { DisplayTransactionTriggerPolicies } from './Components/TransactionTriggerPolicy/DisplayTransactionTriggerPolicies'
 
 const FullRedirect = styled.div`
@@ -48,9 +47,6 @@ const MainLayout = () => {
           <Route path="/rtpList" exact={true} component={ShowRoutineTransactionPolicies} />
           <Route path="/ttpList">
             <DisplayTransactionTriggerPolicies />
-          </Route>
-          <Route path="/rtp/update/:id">
-            <UpdateRtp />
           </Route>
         </Switch>
       </Layout.Content>

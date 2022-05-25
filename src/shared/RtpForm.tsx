@@ -20,7 +20,7 @@ type Props = {
 }
 
 export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
-  const [endDate, setEndDate] = React.useState<Date>()
+  // const [endDate, setEndDate] = React.useState<Date>()
   const [_startDate, setStartDate] = React.useState<Date>()
   const currentDate = new Date()
   const dateFormat = 'YYYY/MM/DD'
@@ -40,7 +40,7 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
       wrapperCol={{ span: 16 }}
       autoComplete="off"
       onValuesChange={(_, vs) => {
-        setEndDate(vs.scheduleEndDate?.toDate())
+        // setEndDate(vs.scheduleEndDate?.toDate())
         setStartDate(vs.scheduleStartDate?.toDate())
       }}
       onFinish={({ scheduleEndDate, scheduleStartDate, amount, unitID, recipient, ...rest }) => {
@@ -76,21 +76,13 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
       <Form.Item
         rules={[
           {
-            message: 'some message',
+            message: 'Schedueled start Date is Required',
             required: true,
           },
           {
-            message: 'some message',
+            message: 'Schedueled start Date should be after current date',
             validator: async (_, d: moment.Moment) => {
               if (d.toDate() < currentDate) {
-                throw 'bad date'
-              }
-            },
-          },
-          {
-            message: 'some message',
-            validator: async (_, d: moment.Moment) => {
-              if (!!endDate && d.toDate() > endDate) {
                 throw 'bad date'
               }
             },
@@ -103,6 +95,17 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
         <DatePicker format={dateFormat} />
       </Form.Item>
       <Form.Item
+        rules={[
+          { required: true, message: 'Schedueled end Date is Required' },
+          {
+            message: 'Schedueled end date must be at least 1 day after Schedueled start date',
+            validator: async (_, d: moment.Moment) => {
+              if (!!_startDate && d.toDate() < moment(_startDate).add(1,"days").toDate()) {
+                throw 'bad date'
+              }
+            },
+          },
+        ]}
         initialValue={moment(initialValues?.scheduleEndDate)}
         label="Schedueled End Date"
         name="scheduleEndDate"
@@ -117,7 +120,12 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
         </Select>
       </Form.Item>
       <AmountInput initialValue={initialValues?.amount} />
-      <Form.Item initialValue={initialValues?.recipient} name="recipient" label="Recipient">
+      <Form.Item
+        rules={[{ required: true, message: 'Recipient is required' }]}
+        initialValue={initialValues?.recipient}
+        name="recipient"
+        label="Recipient"
+      >
         <NymSelect />
       </Form.Item>
       <NymSenderSelect initialValue={initialValues?.nymID} />

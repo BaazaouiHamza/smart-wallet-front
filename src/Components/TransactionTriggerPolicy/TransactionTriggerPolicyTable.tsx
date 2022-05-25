@@ -17,11 +17,11 @@ type Props = {
 }
 
 export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
-  let contributor:boolean
+  let contributor: boolean
   const units = useUnits()
   const walletPermission = useOrganizationPermissions()?.walletPermissions
   if (walletPermission) {
-    walletPermission[nymId] === 'CONTRIBUTOR' ? contributor=true : contributor=false
+    walletPermission[nymId] === 'CONTRIBUTOR' ? (contributor = true) : (contributor = false)
   }
   const [showUpdateModal, setShowUpateModal] = useState<boolean>(false)
   const [updateId, setUpdateId] = useState(0)
@@ -93,7 +93,7 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
       key: 'x',
       render: (_, item) => (
         <div key={item.id}>
-          {contributor ?  (
+          {contributor ? (
             <>
               <Button
                 loading={loadingDelete}
@@ -112,7 +112,9 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
                 Update
               </Button>
             </>
-          ): <span>You are  a viewer of this wallet</span>}
+          ) : (
+            <span>You are a viewer of this wallet</span>
+          )}
         </div>
       ),
     },

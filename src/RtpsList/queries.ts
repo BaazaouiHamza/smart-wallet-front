@@ -1,4 +1,4 @@
-import { getReq } from '~/src/types/TransactionTriggerPolicy';
+import { getReq } from '~/src/types/TransactionTriggerPolicy'
 import { pipe } from 'fp-ts/lib/function'
 import {
   getRtp,
@@ -32,8 +32,8 @@ export const useGetOrganisationWallets = (org?: string) =>
     keepPreviousData: true,
   })
 
-export const useGetRoutineTransactionPolicyById = (nymID:string,id: number) =>
-  useQuery(['rtp',nymID, id], pipe(getRtp(nymID,id), throwLeft))
+export const useGetRoutineTransactionPolicyById = (nymID: string, id: number) =>
+  useQuery(['rtp', nymID, id], pipe(getRtp(nymID, id), throwLeft))
 
 export const useAddRoutineTransactionPolicy = () => {
   const queryClient = useQueryClient()
@@ -68,7 +68,7 @@ export const useUpdateRoutineTransactionPolicy = () => {
 export const useDeleteRoutineTransactionPolicy = () => {
   const queryClient = useQueryClient()
 
-  return useMutation((data:getReq) => pipe(deleteRtp(data), throwLeft)(), {
+  return useMutation((data: getReq) => pipe(deleteRtp(data), throwLeft)(), {
     onSuccess: (_, d) => {
       queryClient.invalidateQueries('rtps')
       queryClient.invalidateQueries(['rtp', d.id])
