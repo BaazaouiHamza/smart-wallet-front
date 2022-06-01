@@ -2,7 +2,6 @@
   "personalSettings": "Paramètres personnels",
   "companySettings": "Paramètres de l'organisation",
   "logout": "Se déconnecter",
-
   "WEB_WALLET": "Portefeuille",
   "MARKETPLACE": "Marché",
   "PROSPERBILL": "Factures",
@@ -17,6 +16,7 @@
   "descriptionMinError":"La longueur minimale du description est de 6 caractères",
   "nameInputPrompt":"Le nom est requis",
   "descriptionInputPrompt":"Description est requis",
-  "asset":"actif"
+  "asset":"actif",
+  "multipleAssets": "Plusieurs actifs"
 
 }

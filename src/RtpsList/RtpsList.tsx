@@ -7,8 +7,9 @@ import { ColumnsType } from 'antd/lib/table'
 import { pipe } from 'fp-ts/lib/function'
 import { record } from 'fp-ts'
 import { UpdateRtpModal } from '../UpdateRtp/updateRtpModal'
-import { useOrganizationPermissions, useUnits } from '@library/react-toolkit'
+import { getParsedFormat, useOrganizationPermissions, useUnits } from '@library/react-toolkit'
 import moment from 'moment'
+import Profile from '../Components/TransactionTriggerPolicy/Profile'
 
 type Props = {
   nymId: string
@@ -58,7 +59,8 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
             item.amount,
             record.collect((unitID, value) => (
               <div key={unitID}>
-                {value} {units[unitID]?.name}
+                {value.toFixed(getParsedFormat(units[unitID]).decimalPoints)}{' '}
+                {getParsedFormat(units[unitID]).code}
               </div>
             ))
           )}
@@ -74,6 +76,7 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
       title: 'Recipient',
       dataIndex: 'recipient',
       key: 'recipient',
+      render:(_,item)=> <Profile nymID={item.recipient} />
     },
     {
       title: 'Start Date',

@@ -100,7 +100,7 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
           {
             message: 'Schedueled end date must be at least 1 day after Schedueled start date',
             validator: async (_, d: moment.Moment) => {
-              if (!!_startDate && d.toDate() < moment(_startDate).add(1,"days").toDate()) {
+              if (!!_startDate && d.toDate() < moment(_startDate).add(1, 'days').toDate()) {
                 throw 'bad date'
               }
             },

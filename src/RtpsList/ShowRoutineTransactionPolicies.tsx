@@ -2,7 +2,7 @@ import { Spin, Collapse, Button } from 'antd'
 import React, { useState } from 'react'
 import { useGetOrganisationWallets } from './queries'
 import { AddRtpModal } from '../CreateRtp/addRtpModal'
-import { useOrganization } from '@library/react-toolkit'
+import { PeerWithNym, useOrganization } from '@library/react-toolkit'
 import { RtpsList } from './RtpsList'
 
 export const ShowRoutineTransactionPolicies: React.FC = () => {
@@ -31,7 +31,10 @@ export const ShowRoutineTransactionPolicies: React.FC = () => {
       <AddRtpModal showAddModal={showAddModal} setShowAddModal={setShowAddModal} />
       <Collapse>
         {data.data.map((wallet) => (
-          <Panel header={wallet.firstName} key={wallet.nym}>
+          <Panel
+            header={<PeerWithNym nym={wallet.nym} firstName={wallet.firstName} />}
+            key={wallet.nym}
+          >
             <RtpsList nymId={wallet.nym} />
           </Panel>
         ))}

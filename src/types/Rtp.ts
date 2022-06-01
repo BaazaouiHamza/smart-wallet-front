@@ -5,6 +5,9 @@ export type PaginationRequest = {
   page: number
   itemsPerPage: number
 }
+export type ProfileReq = {
+  value:string
+}
 export const RoutineTransactionPolicy = t.type({
   id: t.number,
   amount: t.record(t.string, t.number),

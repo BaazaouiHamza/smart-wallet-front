@@ -2,7 +2,6 @@
   "personalSettings": "Personal settings",
   "companySettings": "Organization settings",
   "logout": "Logout",
-
   "WEB_WALLET": "Wallets",
   "MARKETPLACE": "Marketplace",
   "PROSPERBILL": "Bills",
@@ -17,5 +16,6 @@
   "descriptionMinError":"Min length of description is 6 charachters",
   "nameInputPrompt":"Name is required",
   "descriptionInputPrompt":"Description is required",
-  "asset":"asset"
+  "asset":"asset",
+  "multipleAssets": "Multiple Assets"
 }

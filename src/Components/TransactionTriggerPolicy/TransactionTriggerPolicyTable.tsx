@@ -8,9 +8,10 @@ import {
   useDeleteTransactionTriggerPolicy,
   useGetTransactionTriggerPolicies,
 } from '~/src/CustomHooks/TransactionTriggerPolicyQueries/queries'
-import { useUnits, useOrganizationPermissions } from '@library/react-toolkit'
+import { useUnits, useOrganizationPermissions, getParsedFormat } from '@library/react-toolkit'
 import { useQueryClient } from 'react-query'
 import { ModalUpdateTransactionTriggerPolicy } from './ModalUpdateTransactionTriggerPolicy'
+import Profile from './Profile'
 
 type Props = {
   nymId: string
@@ -18,6 +19,7 @@ type Props = {
 
 export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
   let contributor: boolean
+
   const units = useUnits()
   const walletPermission = useOrganizationPermissions()?.walletPermissions
   if (walletPermission) {
@@ -58,7 +60,8 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
             item.amount,
             record.collect((unitID, value) => (
               <div key={unitID}>
-                {value} {units[unitID]?.name}
+                {value.toFixed(getParsedFormat(units[unitID]).decimalPoints)}{' '}
+                {getParsedFormat(units[unitID]).code}
               </div>
             ))
           )}
@@ -75,7 +78,8 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
             item.targetedBalance,
             record.collect((unitID, value) => (
               <div key={unitID}>
-                {value} {units[unitID]?.name}
+                {value.toFixed(getParsedFormat(units[unitID]).decimalPoints)}{' '}
+                {getParsedFormat(units[unitID]).code}
               </div>
             ))
           )}
@@ -86,6 +90,7 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
       title: 'Recipient',
       dataIndex: 'recipient',
       key: 'recipient',
+      render: (_, item) => <Profile nymID={item.recipient} />,
     },
     {
       title: 'Action',

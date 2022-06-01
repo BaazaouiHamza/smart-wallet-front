@@ -1,4 +1,4 @@
-import { useOrganization } from '@library/react-toolkit'
+import { PeerWithNym, useOrganization } from '@library/react-toolkit'
 import { Button, Collapse, Spin } from 'antd'
 import React, { useState } from 'react'
 import { useGetOrganisationWallets } from '~/src/RtpsList/queries'
@@ -32,7 +32,7 @@ export const DisplayTransactionTriggerPolicies = () => {
       />
       <Collapse>
         {data.data.map((wallet) => (
-          <Panel header={wallet.firstName} key={wallet.nym}>
+          <Panel header={<PeerWithNym nym={wallet.nym} firstName={wallet.firstName} />} key={wallet.nym}>
             <TransactionTriggerPolicyTable nymId={wallet.nym} />
           </Panel>
         ))}
