@@ -1,0 +1,30 @@
+projectGroup: PFE-projects
+projectName: smart-wallet-front
+ 
+### Slack
+channel: git_prosper-apps
+ 
+### Test
+runTests: true
+testCommandFlag: "" #Test command
+#testFolderPath: #the folder that contains test files
+
+### Build
+buildCommand:
+    - "yarn install --no-progress"
+    - "yarn run build 1> errorlint.log"
+    - "tar -czvf smart-wallet.tar.gz -C dist ."
+
+buildOutputFolder: ""
+outputFilePattern: "smart-wallet.tar.gz"
+ 
+### Deploy
+deployUponTestSuccess: true
+
+### Upload
+uploadArtifacts: true
+ 
+### Sonarqube analysis
+sonarqubeTest: true
+sonarProjectKey: PA-smart-wallet-frontend
+sonarSources: .
