@@ -12,6 +12,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { taskEither, task, either } from 'fp-ts'
 import { PaginationRequest, RoutineTransactionPolicy } from '../types'
+import { useOrganization } from '@library/react-toolkit'
 
 export const throwLeft: <L, R>(ma: taskEither.TaskEither<L, R>) => task.Task<R> = task.map(
   either.fold(
@@ -27,10 +28,13 @@ export const useGetRoutineTransactionPolicies = (nymID: string, req: PaginationR
     keepPreviousData: true,
   })
 
-export const useGetOrganisationWallets = (org?: string) =>
-  useQuery(['orgWallets', org], pipe(getGetOrganisationWallets(org), throwLeft), {
-    keepPreviousData: true,
+export const useGetOrganisationWallets = () => {
+  const org = useOrganization()
+
+  return useQuery(['orgWallets', org], pipe(getGetOrganisationWallets(org?.name), throwLeft), {
+    enabled: !!org,
   })
+}
 
 export const useGetRoutineTransactionPolicyById = (nymID: string, id: number) =>
   useQuery(['rtp', nymID, id], pipe(getRtp(nymID, id), throwLeft))
@@ -47,11 +51,14 @@ export const useAddRoutineTransactionPolicy = () => {
 export const useCreateRoutineTransactionPolicy = () => {
   const queryClient = useQueryClient()
 
-  return useMutation((data: RoutineTransactionPolicy) => pipe(addRtp(data), throwLeft)(), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('rtps')
-    },
-  })
+  return useMutation(
+    (data: Omit<RoutineTransactionPolicy, 'id'>) => pipe(addRtp(data), throwLeft)(),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('rtps')
+      },
+    }
+  )
 }
 
 export const useUpdateRoutineTransactionPolicy = () => {

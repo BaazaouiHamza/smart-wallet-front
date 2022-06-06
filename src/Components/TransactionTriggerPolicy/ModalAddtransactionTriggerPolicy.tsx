@@ -1,25 +1,23 @@
 import React, { FC } from 'react'
-import { Modal } from 'antd'
-import { TransactionTriggerPolicyForm } from '~/src/shared/TransactionTriggerPolicyForm'
+import { Form, Modal } from 'antd'
+import TransactionTriggerPolicyForm from '~/src/shared/TransactionTriggerPolicyForm'
 import { useAddTransactionTriggerPolicy } from '~/src/CustomHooks/TransactionTriggerPolicyQueries/queries'
+
 type Props = {
-  showAddModal: boolean
-  setShowAddModal: (value: React.SetStateAction<boolean>) => void
+  visible: boolean
+  close: () => void
 }
-export const ModalAddTransactionTriggerPolicy: FC<Props> = ({ showAddModal, setShowAddModal }) => {
-  const { mutate, isLoading } = useAddTransactionTriggerPolicy()
-  const onFormSubmit = async (data) => {
-    mutate({ ...data })
-    setShowAddModal(false)
-  }
+
+export const ModalAddTransactionTriggerPolicy: FC<Props> = ({ visible, close }) => {
+  const [form] = Form.useForm()
+  const addTTP = useAddTransactionTriggerPolicy()
+
   return (
-    <Modal
-      confirmLoading={isLoading}
-      onOk={onFormSubmit}
-      visible={showAddModal}
-      onCancel={() => setShowAddModal(false)}
-    >
-      <TransactionTriggerPolicyForm onSubmit={onFormSubmit} isLoading={isLoading} />
+    <Modal confirmLoading={addTTP.isLoading} onOk={form.submit} visible={visible} onCancel={close}>
+      <TransactionTriggerPolicyForm
+        onSubmit={(data) => addTTP.mutate(data, { onSuccess: () => close() })}
+        form={form}
+      />
     </Modal>
   )
 }

@@ -1,38 +1,52 @@
-import { Modal, Spin } from 'antd'
+import { Form, Modal, Spin } from 'antd'
 import React, { FC } from 'react'
 import {
   useGetRoutineTransactionPolicyById,
   useUpdateRoutineTransactionPolicy,
 } from '../RtpsList/queries'
 import { RtpForm } from '../shared'
-type props = {
-  showUpdateModal: boolean
-  setShowUpdateModal: (value: React.SetStateAction<boolean>) => void
+
+type Props = {
+  visible: boolean
+  close: () => void
   id: number
   nymID: string
 }
-export const UpdateRtpModal: FC<props> = ({ showUpdateModal, setShowUpdateModal, id, nymID }) => {
-  // const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
-  const { isError, isLoading, data } = useGetRoutineTransactionPolicyById(nymID, id)
-  const { mutate, isLoading: isMutating } = useUpdateRoutineTransactionPolicy()
-  const onFormSubmit = async (formData) => {
-    mutate({ ...formData, id })
-    setShowUpdateModal(false)
-  }
-  if (isLoading) {
-    return <Spin size="large" />
-  }
-  if (isError) {
-    ;<p>Something went wrong</p>
-  }
+
+export const UpdateRtpModal: FC<Props> = ({ visible, close, id, nymID }) => {
+  const [form] = Form.useForm()
+  const rtp = useGetRoutineTransactionPolicyById(nymID, id)
+  const updateRTP = useUpdateRoutineTransactionPolicy()
+
+  React.useEffect(() => {
+    form.resetFields()
+  }, [visible && !!rtp.data])
+
   return (
     <Modal
-      confirmLoading={isLoading}
-      onOk={onFormSubmit}
-      visible={showUpdateModal}
-      onCancel={() => setShowUpdateModal(false)}
+      confirmLoading={updateRTP.isLoading}
+      onOk={form.submit}
+      visible={visible}
+      onCancel={() => close()}
     >
-      <RtpForm initialValues={data} isLoading={isMutating} onSubmit={onFormSubmit} />
+      {rtp.isError ? (
+        <p>Something went wrong</p>
+      ) : (
+        <Spin size="large" spinning={rtp.isLoading}>
+          <RtpForm
+            form={form}
+            initialValues={rtp.data}
+            onSubmit={(formData) => {
+              updateRTP.mutate(
+                { ...formData, id },
+                {
+                  onSuccess: () => close(),
+                }
+              )
+            }}
+          />
+        </Spin>
+      )}
     </Modal>
   )
 }

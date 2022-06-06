@@ -1,27 +1,36 @@
-import { Modal } from 'antd'
+import { Form, Modal } from 'antd'
 import React, { FC } from 'react'
 import { useCreateRoutineTransactionPolicy } from '../RtpsList/queries'
 import { RtpForm } from '../shared'
-type props = {
-  showAddModal: boolean
-  setShowAddModal: (value: React.SetStateAction<boolean>) => void
+
+type Props = {
+  visible: boolean
+  close: () => void
 }
-export const AddRtpModal: FC<props> = ({ showAddModal, setShowAddModal }) => {
-  // const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
-  // const { mutate, isLoading } = useAddRoutineTransactionPolicy()
-  const { mutate, isLoading } = useCreateRoutineTransactionPolicy()
-  const onFormSubmit = async (data) => {
-    mutate({ ...data })
-    setShowAddModal(false)
-  }
+
+const AddRtpModal: FC<Props> = ({ visible, close }) => {
+  const [form] = Form.useForm()
+  const createRtp = useCreateRoutineTransactionPolicy()
   return (
     <Modal
-      confirmLoading={isLoading}
-      onOk={onFormSubmit}
-      visible={showAddModal}
-      onCancel={() => setShowAddModal(false)}
+      confirmLoading={createRtp.isLoading}
+      onOk={() => {
+        console.debug('ok')
+        form.submit()
+      }}
+      visible={visible}
+      onCancel={() => close()}
     >
-      <RtpForm onSubmit={onFormSubmit} isLoading={isLoading} />
+      <RtpForm
+        onSubmit={(data) => {
+          createRtp.mutate(data, {
+            onSuccess: () => close(),
+          })
+        }}
+        form={form}
+      />
     </Modal>
   )
 }
+
+export default AddRtpModal

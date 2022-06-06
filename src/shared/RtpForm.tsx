@@ -1,5 +1,5 @@
 import { NymSelect } from '@library/react-toolkit'
-import { Form, Input, Button, Select, DatePicker } from 'antd'
+import { Form, Input, Select, DatePicker, FormInstance } from 'antd'
 import moment from 'moment'
 import React, { FC } from 'react'
 import { TranslatedMessage } from '../translations/data'
@@ -14,16 +14,16 @@ type RoutineTransactionPolicyWithoutID = Omit<RoutineTransactionPolicy, 'id'>
 // type RTPWithMoment = ConvertDatesToMoment<RoutineTransactionPolicyWithoutID>
 
 type Props = {
+  form: FormInstance
   onSubmit: (data: RoutineTransactionPolicyWithoutID) => void
-  isLoading: boolean
   initialValues?: RoutineTransactionPolicyWithoutID
 }
 
-export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
-  // const [endDate, setEndDate] = React.useState<Date>()
-  const [_startDate, setStartDate] = React.useState<Date>()
+export const RtpForm: FC<Props> = ({ form, onSubmit, initialValues }) => {
+  const [startDate, setStartDate] = React.useState<Date>()
   const currentDate = new Date()
   const dateFormat = 'YYYY/MM/DD'
+
   return (
     <Form<{
       name: string
@@ -31,22 +31,32 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
       scheduleStartDate: moment.Moment
       scheduleEndDate: moment.Moment
       frequency: 'DAILY' | 'WEEKLY' | 'MONTHLY'
-      amount: number
-      unitID: string
+      amount: Record<string, number>
       nymID: string
-      recipient: any
+      recipient: { nym: string }
     }>
+      form={form}
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       autoComplete="off"
       onValuesChange={(_, vs) => {
-        // setEndDate(vs.scheduleEndDate?.toDate())
         setStartDate(vs.scheduleStartDate?.toDate())
       }}
-      onFinish={({ scheduleEndDate, scheduleStartDate, amount, unitID, recipient, ...rest }) => {
+      initialValues={
+        !!initialValues
+          ? {
+              ...initialValues,
+              scheduleStartDate: moment(initialValues.scheduleStartDate),
+              scheduleEndDate: moment(initialValues.scheduleEndDate),
+              recipient: { nym: initialValues.recipient },
+            }
+          : undefined
+      }
+      onFinish={({ scheduleEndDate, scheduleStartDate, amount, recipient, ...rest }) => {
+        console.debug('submitting')
         onSubmit({
           ...rest,
-          amount: { [unitID]: amount },
+          amount,
           scheduleStartDate: scheduleStartDate.toDate(),
           scheduleEndDate: scheduleEndDate.toDate(),
           recipient: recipient.nym,
@@ -61,15 +71,13 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
           { min: 3, message: <TranslatedMessage id="nameMinError" /> },
         ]}
         label={<TranslatedMessage id="name" />}
-        initialValue={initialValues?.name}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        initialValue={initialValues?.description}
         label="description"
-        tooltip="This is a required field"
         name="description"
+        rules={[{ required: true, message: <TranslatedMessage id="requiredField" /> }]}
       >
         <Input.TextArea />
       </Form.Item>
@@ -90,7 +98,6 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
         ]}
         label="Schedueled Start Date"
         name="scheduleStartDate"
-        initialValue={moment(initialValues?.scheduleStartDate)}
       >
         <DatePicker format={dateFormat} />
       </Form.Item>
@@ -100,39 +107,46 @@ export const RtpForm: FC<Props> = ({ onSubmit, isLoading, initialValues }) => {
           {
             message: 'Schedueled end date must be at least 1 day after Schedueled start date',
             validator: async (_, d: moment.Moment) => {
-              if (!!_startDate && d.toDate() < moment(_startDate).add(1, 'days').toDate()) {
+              if (!!startDate && d.toDate() < moment(startDate).add(1, 'days').toDate()) {
                 throw 'bad date'
               }
             },
           },
         ]}
-        initialValue={moment(initialValues?.scheduleEndDate)}
         label="Schedueled End Date"
         name="scheduleEndDate"
       >
         <DatePicker format={dateFormat} />
       </Form.Item>
-      <Form.Item initialValue={initialValues?.frequency} name="frequency" label="Frequency">
+      <Form.Item name="frequency" label="Frequency">
         <Select>
           <Select.Option value="DAILY">DAILY</Select.Option>
           <Select.Option value="WEEKLY">WEEKLY</Select.Option>
           <Select.Option value="MONTHLY">MONTHLY</Select.Option>
         </Select>
       </Form.Item>
-      <AmountInput initialValue={initialValues?.amount} />
+      <Form.Item
+        name="amount"
+        label="Amount"
+        rules={[{ required: true, message: 'Amount is required' }]}
+      >
+        <AmountInput />
+      </Form.Item>
       <Form.Item
         rules={[{ required: true, message: 'Recipient is required' }]}
-        initialValue={initialValues?.recipient}
         name="recipient"
         label="Recipient"
       >
         <NymSelect />
       </Form.Item>
-      <NymSenderSelect initialValue={initialValues?.nymID} />
-      <Form.Item>
-        <Button loading={isLoading} htmlType="submit" type="primary">
-          Submit
-        </Button>
+      <Form.Item
+        rules={[{ required: true, message: 'nymId is required' }]}
+        name="nymID"
+        label="Sender"
+        required
+        tooltip="This is a required field"
+      >
+        <NymSenderSelect />
       </Form.Item>
     </Form>
   )

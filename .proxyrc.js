@@ -1,7 +1,6 @@
 const { createProxyMiddleware } = require('http-proxy-middleware')
 // var cookieParser = require('cookie-parser')
 
-
 module.exports = function (app) {
   // app.use(cookieParser())
   app.use(
@@ -150,12 +149,18 @@ module.exports = function (app) {
         '*': 'localhost',
       },
       onProxyReq: async (proxyReq, req) => {
-        // console.log(req.cookies)
-        // console.log(req.headers.cookie)
-       console.log(req.headers.cookie.split(";")[0].slice("access_token"))
-        const accessToken = req.headers.cookie.split(";")[0].slice(13)
-        if (accessToken) {
-          proxyReq.setHeader('Authorization', `Bearer ${accessToken}`)
+        const accessToken = req.headers.cookie
+          .split(';')
+          .map((ck) => ck.split('='))
+          .map(([name, value]) => {
+            console.log(name, value)
+            return [name.trimEnd().trimStart(), value.trimEnd().trimStart()]
+          })
+          .find(([name, _]) => name === 'access_token')
+
+        console.log('access_token', accessToken)
+        if (accessToken?.[1]) {
+          proxyReq.setHeader('Authorization', `Bearer ${accessToken?.[1]}`)
         }
       },
     })

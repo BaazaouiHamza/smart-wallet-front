@@ -44,10 +44,8 @@ const MainLayout = () => {
       </Header>
       <Layout.Content style={{ padding: '0 50px', marginTop: 48, marginBottom: 48 }}>
         <Switch>
-          <Route path="/rtpList" exact={true} component={ShowRoutineTransactionPolicies} />
-          <Route path="/ttpList">
-            <DisplayTransactionTriggerPolicies />
-          </Route>
+          <Route path="/rtpList" exact component={ShowRoutineTransactionPolicies} />
+          <Route path="/ttpList" exact component={DisplayTransactionTriggerPolicies} />
         </Switch>
       </Layout.Content>
     </Layout>

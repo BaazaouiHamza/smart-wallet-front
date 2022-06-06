@@ -4,10 +4,9 @@ import { unknown } from 'io-ts'
 import * as axios from '~/src/axios'
 import { TransactionTriggerPolicy, getReq } from '~/src/types/TransactionTriggerPolicy'
 
-export const addTransactionTriggerPolicy = ({ ...data }: TransactionTriggerPolicy) =>
+export const addTransactionTriggerPolicy = (data: Omit<TransactionTriggerPolicy, 'id'>) =>
   axios.post(`/smart-wallet/api/${data.nymID}/transaction-trigger-policy`, data, {
     decoder: unknown,
-    encoder: TransactionTriggerPolicy,
   })
 
 export const getTransacionTriggerPolicies = (nymID: string, req: PaginationRequest) =>

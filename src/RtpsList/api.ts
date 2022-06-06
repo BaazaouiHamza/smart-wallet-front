@@ -1,10 +1,19 @@
 import { getReq } from '~/src/types/TransactionTriggerPolicy'
-import { any, unknown } from 'io-ts'
 import * as axios from '../axios'
+import * as t from 'io-ts'
 import { PaginationRequest, TransactionPolicies, RoutineTransactionPolicy } from '../types'
 
+const Wallets = t.type({
+  data: t.array(
+    t.intersection([
+      t.type({ nym: t.string }),
+      t.partial({ firstName: t.string, lastName: t.string }),
+    ])
+  ),
+})
+
 export const getGetOrganisationWallets = (org?: string) =>
-  axios.get(`/api/web-wallet/wallets/${org}`, { decoder: any })
+  axios.get(`/api/web-wallet/wallets/${org}`, { decoder: Wallets, params: { itemsPerPage: 20 } })
 
 export const getRtps = (nymId: string, req: PaginationRequest) =>
   axios.get(`/smart-wallet/api/${nymId}/routine-transaction-policy`, {
@@ -13,7 +22,7 @@ export const getRtps = (nymId: string, req: PaginationRequest) =>
   })
 
 export const removeRtp = (id: string) =>
-  axios.delete_(`/smart-wallet/api/user-policy/${id}`, { decoder: unknown })
+  axios.delete_(`/smart-wallet/api/user-policy/${id}`, { decoder: t.unknown })
 
 export const getRtp = (nymID: string, id: number) =>
   axios.get(`/smart-wallet/api/${nymID}/routine-transaction-policy/${id}`, {
@@ -22,21 +31,21 @@ export const getRtp = (nymID: string, id: number) =>
 
 export const createRtp = (rtp: RoutineTransactionPolicy) =>
   axios.post(`/smart-wallet/api/policy/routineTransactionPolicy`, rtp, {
-    decoder: unknown,
+    decoder: t.unknown,
     encoder: RoutineTransactionPolicy,
   })
-export const addRtp = ({ ...data }: RoutineTransactionPolicy) =>
+
+export const addRtp = (data: Omit<RoutineTransactionPolicy, 'id'>) =>
   axios.post(`/smart-wallet/api/${data.nymID}/routine-transaction-policy`, data, {
-    decoder: unknown,
-    encoder: RoutineTransactionPolicy,
+    decoder: t.unknown,
   })
 
 export const updateRtp = ({ id, ...data }: RoutineTransactionPolicy) =>
   axios.put(`/smart-wallet/api/${data.nymID}/routine-transaction-policy/${id}`, data, {
-    decoder: unknown,
+    decoder: t.unknown,
   })
 
 export const deleteRtp = ({ nymID, id }: getReq) =>
   axios.delete_(`/smart-wallet/api/${nymID}/routine-transaction-policy/${id}`, {
-    decoder: unknown,
+    decoder: t.unknown,
   })

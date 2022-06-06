@@ -25,7 +25,8 @@ export const useAddTransactionTriggerPolicy = () => {
   const queryClient = useQueryClient()
 
   return useMutation(
-    (data: TransactionTriggerPolicy) => pipe(addTransactionTriggerPolicy(data), throwLeft)(),
+    (data: Omit<TransactionTriggerPolicy, 'id'>) =>
+      pipe(addTransactionTriggerPolicy(data), throwLeft)(),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('ttps')

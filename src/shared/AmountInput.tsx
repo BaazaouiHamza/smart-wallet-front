@@ -1,39 +1,51 @@
 import React, { FC } from 'react'
-import { TranslatedMessage, useUnits } from '@library/react-toolkit'
-import { InputNumber, Select, Form } from 'antd'
+import { useUnits } from '@library/react-toolkit'
+import { InputNumber, Select } from 'antd'
 import { Amount } from '../types/TransactionTriggerPolicy'
+import { pipe } from 'fp-ts/lib/function'
+import { array, option, record } from 'fp-ts'
 
 type Props = {
-  initialValue?: Amount
+  value?: Amount
+  onChange?: (_: Amount) => void
 }
 
-export const AmountInput: FC<Props> = ({ initialValue: amount }) => {
+export const AmountInput: FC<Props> = ({ value, onChange }) => {
+  console.debug('AmountInput', value)
+  const [amount, setAmount] = React.useState<number>()
+  const [unit, setUnit] = React.useState<string>()
+  const singleValue = !!value
+    ? pipe(value, record.toArray, array.head, option.toUndefined)
+    : undefined
+
   const units = useUnits()
+
   return (
-    <Form.Item
-      name="amount"
-      label="Amount"
-      initialValue={amount ? Object.values(amount)[0] : ''}
-      rules={[{ required: true, message: 'Amount is required' }]}
-    >
-      <InputNumber
-        addonAfter={
-          <Form.Item
-            name="unitID"
-            label={<TranslatedMessage id="asset" />}
-            initialValue={amount ? Object.keys(amount)[0] : ''}
-            rules={[{ required: true, message: 'Asset is required' }]}
-          >
-            <Select>
-              {Object.keys(units).map((unit) => (
-                <Select.Option value={unit} key={unit}>
-                  {units[unit].name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
+    <InputNumber
+      value={singleValue?.[1]}
+      onChange={(i) => {
+        setAmount(i)
+        if (!!unit && i !== undefined) {
+          onChange?.({ [unit]: i })
         }
-      />
-    </Form.Item>
+      }}
+      addonAfter={
+        <Select
+          onChange={(u) => {
+            setUnit(u)
+            if (!!u && amount !== undefined) {
+              onChange?.({ [u]: amount })
+            }
+          }}
+          value={singleValue?.[0]}
+        >
+          {Object.keys(units).map((unit) => (
+            <Select.Option value={unit} key={unit}>
+              {units[unit].name}
+            </Select.Option>
+          ))}
+        </Select>
+      }
+    />
   )
 }

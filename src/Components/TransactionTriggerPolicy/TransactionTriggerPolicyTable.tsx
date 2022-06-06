@@ -8,10 +8,11 @@ import {
   useDeleteTransactionTriggerPolicy,
   useGetTransactionTriggerPolicies,
 } from '~/src/CustomHooks/TransactionTriggerPolicyQueries/queries'
-import { useUnits, useOrganizationPermissions, getParsedFormat } from '@library/react-toolkit'
+import { useOrganizationPermissions } from '@library/react-toolkit'
 import { useQueryClient } from 'react-query'
 import { ModalUpdateTransactionTriggerPolicy } from './ModalUpdateTransactionTriggerPolicy'
 import Profile from './Profile'
+import Amount from '../Amount'
 
 type Props = {
   nymId: string
@@ -20,7 +21,6 @@ type Props = {
 export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
   let contributor: boolean
 
-  const units = useUnits()
   const walletPermission = useOrganizationPermissions()?.walletPermissions
   if (walletPermission) {
     walletPermission[nymId] === 'CONTRIBUTOR' ? (contributor = true) : (contributor = false)
@@ -28,9 +28,9 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
   const [showUpdateModal, setShowUpateModal] = useState<boolean>(false)
   const [updateId, setUpdateId] = useState(0)
   const [updateNymID, setUpdateNymID] = useState('')
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
   const { data, isLoading, isError } = useGetTransactionTriggerPolicies(nymId, {
-    page: page,
+    page,
     itemsPerPage: 5,
   })
   const { mutateAsync, isLoading: loadingDelete } = useDeleteTransactionTriggerPolicy()
@@ -59,10 +59,7 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
           {pipe(
             item.amount,
             record.collect((unitID, value) => (
-              <div key={unitID}>
-                {value.toFixed(getParsedFormat(units[unitID]).decimalPoints)}{' '}
-                {getParsedFormat(units[unitID]).code}
-              </div>
+              <Amount amount={value} key={unitID} unitID={unitID} />
             ))
           )}
         </span>
@@ -77,10 +74,7 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
           {pipe(
             item.targetedBalance,
             record.collect((unitID, value) => (
-              <div key={unitID}>
-                {value.toFixed(getParsedFormat(units[unitID]).decimalPoints)}{' '}
-                {getParsedFormat(units[unitID]).code}
-              </div>
+              <Amount amount={value} key={unitID} unitID={unitID} />
             ))
           )}
         </span>
@@ -135,8 +129,8 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
         <ModalUpdateTransactionTriggerPolicy
           nymID={updateNymID}
           id={updateId}
-          showUpdateModal={showUpdateModal}
-          setShowUpdateModal={setShowUpateModal}
+          visible={showUpdateModal}
+          close={() => setShowUpateModal(false)}
         />
       )}
       <Table

@@ -5,29 +5,29 @@ import { useQueryClient } from 'react-query'
 import { useDeleteRoutineTransactionPolicy, useGetRoutineTransactionPolicies } from './queries'
 import { ColumnsType } from 'antd/lib/table'
 import { pipe } from 'fp-ts/lib/function'
-import { record } from 'fp-ts'
+import { record, string } from 'fp-ts'
 import { UpdateRtpModal } from '../UpdateRtp/updateRtpModal'
-import { getParsedFormat, useOrganizationPermissions, useUnits } from '@library/react-toolkit'
-import moment from 'moment'
+import { useOrganizationPermissions } from '@library/react-toolkit'
 import Profile from '../Components/TransactionTriggerPolicy/Profile'
+import Amount from '../Components/Amount'
+import { FormattedDate } from 'react-intl'
 
 type Props = {
   nymId: string
 }
 
 export const RtpsList: React.FC<Props> = ({ nymId }) => {
-  const units = useUnits()
   let contributor: boolean
   const walletPermission = useOrganizationPermissions()?.walletPermissions
   if (walletPermission) {
     walletPermission[nymId] === 'CONTRIBUTOR' ? (contributor = true) : (contributor = false)
   }
   const [showUpdateModal, setShowUpateModal] = useState<boolean>(false)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
   const [updateId, setUpdateId] = useState(0)
   const [updateNymID, setUpdateNymID] = useState('')
   const { data, isLoading, isError } = useGetRoutineTransactionPolicies(nymId, {
-    page: page,
+    page,
     itemsPerPage: 5,
   })
   // const unitName = data?.data.map((policy) => units[Object.keys(policy.amount)[0]].name)
@@ -57,11 +57,8 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
         <span>
           {pipe(
             item.amount,
-            record.collect((unitID, value) => (
-              <div key={unitID}>
-                {value.toFixed(getParsedFormat(units[unitID]).decimalPoints)}{' '}
-                {getParsedFormat(units[unitID]).code}
-              </div>
+            record.collect(string.Ord)((unitID, value) => (
+              <Amount amount={value} unitID={unitID} key={unitID} />
             ))
           )}
         </span>
@@ -76,19 +73,23 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
       title: 'Recipient',
       dataIndex: 'recipient',
       key: 'recipient',
-      render:(_,item)=> <Profile nymID={item.recipient} />
+      render: (_, item) => <Profile nymID={item.recipient} />,
     },
     {
       title: 'Start Date',
       dataIndex: 'scheduleStartDate',
       key: 'schedule_start_date',
-      render: (_, item) => <span>{moment(item.scheduleStartDate).format('MMM Do YY')}</span>,
+      render: (_, item) => (
+        <FormattedDate value={item.scheduleStartDate} year="2-digit" month="short" day="2-digit" />
+      ),
     },
     {
       title: 'End Date',
       dataIndex: 'scheduleEndDate',
       key: 'schedule_end_date',
-      render: (_, item) => <span>{moment(item.scheduleEndDate).format('MMM Do YY')}</span>,
+      render: (_, item) => (
+        <FormattedDate value={item.scheduleEndDate} year="2-digit" month="short" day="2-digit" />
+      ),
     },
     {
       title: 'Action',
@@ -133,8 +134,8 @@ export const RtpsList: React.FC<Props> = ({ nymId }) => {
         <UpdateRtpModal
           id={updateId}
           nymID={updateNymID}
-          showUpdateModal={showUpdateModal}
-          setShowUpdateModal={setShowUpateModal}
+          visible={showUpdateModal}
+          close={() => setShowUpateModal(false)}
         />
       )}
       <Table
