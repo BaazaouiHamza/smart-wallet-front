@@ -26,5 +26,5 @@ uploadArtifacts: true
  
 ### Sonarqube analysis
 sonarqubeTest: true
-sonarProjectKey: PA-smart-wallet-frontend
+sonarProjectKey: smart-wallet-frontend
 sonarSources: .
