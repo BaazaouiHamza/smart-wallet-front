@@ -1,10 +1,10 @@
 - name: Deploy PFE projects smart-wallet-front to env "{{ ENV }}"
 
   hosts:
-    "{{ 'PA-smart-wallet-develop' if ENV|lower == 'develop' \
-     else 'PA-smart-wallet-testing' if ENV|lower == 'testing' \
-     else 'PA-smart-wallet-preprod' if ENV|lower == 'preprod' \
-     else 'PA-smart-wallet-production' if ENV |lower == 'prod' }}"
+    "{{ 'smart-wallet-develop' if ENV|lower == 'develop' \
+     else 'smart-wallet-testing' if ENV|lower == 'testing' \
+     else 'smart-wallet-preprod' if ENV|lower == 'preprod' \
+     else 'smart-wallet-production' if ENV |lower == 'prod' }}"
 
   vars:
     app_name: smart-wallet
