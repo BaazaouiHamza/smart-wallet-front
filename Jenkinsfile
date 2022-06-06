@@ -17,6 +17,6 @@ properties(
     
 timestamps {
     node(){
-        golangPipeline(project_url)
+        nodePipeline(project_url)
     }
 }
