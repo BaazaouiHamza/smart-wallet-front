@@ -9,11 +9,10 @@ const Amount = ({ amount, unitID }: { amount: number; unitID: string }) => {
     ? getParsedFormat(selectedUnit)
     : { decimalPoints: 1, code: '' }
 
-
   return (
     <>
       <FormattedNumber
-        value={amount / (10 ** decimalPoints)}
+        value={amount / 10 ** decimalPoints}
         minimumFractionDigits={decimalPoints}
         maximumFractionDigits={decimalPoints}
       />{' '}

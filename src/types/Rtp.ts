@@ -6,7 +6,7 @@ export type PaginationRequest = {
   itemsPerPage: number
 }
 export type ProfileReq = {
-  value:string
+  value: string
 }
 export const RoutineTransactionPolicy = t.type({
   id: t.number,

@@ -12,7 +12,7 @@ export const throwLeft: <L, R>(ma: taskEither.TaskEither<L, R>) => task.Task<R> 
   )
 )
 
-export const useGetProfileNames = (nymID?:string) =>
+export const useGetProfileNames = (nymID?: string) =>
   useQuery(['profiles', nymID], pipe(getProfileName(nymID), throwLeft), {
     keepPreviousData: true,
   })
