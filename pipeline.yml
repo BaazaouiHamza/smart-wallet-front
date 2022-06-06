@@ -1,0 +1,26 @@
+projectGroup: prosperus
+projectName: smart-wallet-front
+
+### Slack
+channel: git_prosperus
+
+### Test
+runTests: true
+testCommandFlag: "test ./..."
+#testFolderPath: test/
+
+### Build
+buildCommand: "make build"
+buildOutputFolder: ""
+outputFilePattern: smart-wallet-front
+
+### Deploy
+deployUponTestSuccess: true
+
+### Upload
+uploadArtifacts: true
+
+### Sonarqube analysis
+sonarqubeTest: true
+sonarProjectKey: smart-wallet-front
+sonarSources: .
