@@ -1,8 +1,8 @@
-projectGroup: PFE-projects
+projectGroup: pfe
 projectName: smart-wallet-front
  
 ### Slack
-channel: git_prosper-apps
+channel: git_pfe
  
 ### Test
 runTests: true
