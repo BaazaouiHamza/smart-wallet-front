@@ -7,7 +7,7 @@
      else 'smart-wallet-production' if ENV |lower == 'prod' }}"
 
   vars:
-    app_name: smart-wallet
+    app_name: smart-wallet-app
     final_dest: /usr/share/nginx/{{ app_name }}/
 
   tasks:
