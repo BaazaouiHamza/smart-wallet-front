@@ -1,17 +1,17 @@
 {
-  "name": "analytics-frontend",
+  "name": "smart-wallet-frontend",
   "version": "0.0.0",
-  "description": "ProsperUS Analytics",
+  "description": "ProsperUS Smart Wallet",
   "repository": {
     "type": "git",
-    "url": "https://git.digitus.tech/prosper-apps/analytics-frontend"
+    "url": "https://git.digitus.me/pfe/smart-wallet-front"
   },
   "author": "Wael Ben Dhia",
   "license": "MIT",
   "browserslist": "defaults",
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html --public-url '/analytics'",
+    "build": "parcel build src/index.html --public-url '/smart-wallet-app' --no-cache --no-source-maps --no-scope-hoist",
     "prettify": "prettier --write ./src/**/*.{ts,tsx}",
     "test": "jest",
     "test:watch": "jest --watch",
