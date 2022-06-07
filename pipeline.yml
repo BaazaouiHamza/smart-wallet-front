@@ -13,10 +13,10 @@ testCommandFlag: "" #Test command
 buildCommand:
     - "yarn install --no-progress"
     - "yarn run build 1> errorlint.log"
-    - "tar -czvf smart-wallet.tar.gz -C dist ."
+    - "tar -czvf smart-wallet-app.tar.gz -C dist ."
 
 buildOutputFolder: ""
-outputFilePattern: "smart-wallet.tar.gz"
+outputFilePattern: "smart-wallet-app.tar.gz"
  
 ### Deploy
 deployUponTestSuccess: true
