@@ -11,7 +11,7 @@
   "browserslist": "defaults",
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html --public-url '/analytics'",
+    "build": "parcel build src/index.html --public-url '/analytics' --no-cache --no-source-maps --no-scope-hoist",
     "prettify": "prettier --write ./src/**/*.{ts,tsx}",
     "test": "jest",
     "test:watch": "jest --watch",
