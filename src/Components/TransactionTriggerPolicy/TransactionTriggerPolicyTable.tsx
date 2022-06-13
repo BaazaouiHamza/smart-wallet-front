@@ -142,7 +142,7 @@ export const TransactionTriggerPolicyTable: React.FC<Props> = ({ nymId }) => {
           total: data?.total,
           pageSize: 5,
           onChange: (page) => {
-            setPage(page)
+            setPage(page-1)
           },
         }}
       />

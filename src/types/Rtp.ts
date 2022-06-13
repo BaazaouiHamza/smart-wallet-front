@@ -17,7 +17,7 @@ export const RoutineTransactionPolicy = t.type({
   scheduleStartDate: DateFromISOString,
   nymID: t.string,
   recipient: t.string,
-  frequency: t.union([t.literal('DAILY'), t.literal('WEEKLY'), t.literal('MONTHLY')]),
+  frequency: t.union([t.literal('daily'), t.literal('weekly'), t.literal('monthly')]),
 })
 
 export type RoutineTransactionPolicy = t.TypeOf<typeof RoutineTransactionPolicy>

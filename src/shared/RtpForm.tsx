@@ -30,7 +30,7 @@ export const RtpForm: FC<Props> = ({ form, onSubmit, initialValues }) => {
       description: string
       scheduleStartDate: moment.Moment
       scheduleEndDate: moment.Moment
-      frequency: 'DAILY' | 'WEEKLY' | 'MONTHLY'
+      frequency: 'daily' | 'weekly' | 'monthly'
       amount: Record<string, number>
       nymID: string
       recipient: { nym: string }
@@ -120,9 +120,9 @@ export const RtpForm: FC<Props> = ({ form, onSubmit, initialValues }) => {
       </Form.Item>
       <Form.Item name="frequency" label="Frequency">
         <Select>
-          <Select.Option value="DAILY">DAILY</Select.Option>
-          <Select.Option value="WEEKLY">WEEKLY</Select.Option>
-          <Select.Option value="MONTHLY">MONTHLY</Select.Option>
+          <Select.Option value="daily">daily</Select.Option>
+          <Select.Option value="weekly">weekly</Select.Option>
+          <Select.Option value="monthly">monthly</Select.Option>
         </Select>
       </Form.Item>
       <Form.Item

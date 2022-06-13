@@ -75,6 +75,7 @@
     "react-hook-form": "^7.30.0",
     "react-intl": "^5.18.1",
     "react-is": ">= 16.8.0",
+    "react-js-cron": "^1.4.0",
     "react-query": "^3.34.19",
     "react-redux": "^7.2.4",
     "react-router": "^5.1.2",
