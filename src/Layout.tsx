@@ -8,6 +8,8 @@ import { ShowRoutineTransactionPolicies } from './RtpsList'
 import { State } from './store'
 import NavMenu from './NavMenu'
 import { DisplayTransactionTriggerPolicies } from './Components/TransactionTriggerPolicy/DisplayTransactionTriggerPolicies'
+import { Home } from './Components/Home/Home'
+import { Wallet } from './Components/Wallet/Wallet'
 
 const FullRedirect = styled.div`
   height: calc(100% - ${(props) => props.theme.footerHeight}px);
@@ -44,8 +46,10 @@ const MainLayout = () => {
       </Header>
       <Layout.Content style={{ padding: '0 50px', marginTop: 48, marginBottom: 48 }}>
         <Switch>
+          <Route path="/" exact component={Home} />
           <Route path="/rtpList" exact component={ShowRoutineTransactionPolicies} />
           <Route path="/ttpList" exact component={DisplayTransactionTriggerPolicies} />
+          <Route path="/wallets/:nymId" exact component={Wallet} />
         </Switch>
       </Layout.Content>
     </Layout>

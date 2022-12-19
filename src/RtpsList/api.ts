@@ -1,16 +1,23 @@
+import { Transaction, UserStateWithName } from '@library/react-toolkit'
 import { getReq } from '~/src/types/TransactionTriggerPolicy'
 import * as axios from '../axios'
 import * as t from 'io-ts'
 import { PaginationRequest, TransactionPolicies, RoutineTransactionPolicy } from '../types'
 
 const Wallets = t.type({
-  data: t.array(
-    t.intersection([
-      t.type({ nym: t.string }),
-      t.partial({ firstName: t.string, lastName: t.string }),
-    ])
-  ),
+  data: t.array(UserStateWithName),
 })
+
+const WalletTransactions = t.type({
+  data: t.array(Transaction),
+  total: t.number,
+})
+
+export const getTransactionsByWallet = (nymId: string) =>
+  axios.get(`/api/web-wallet/transactions/${nymId}`, { decoder:WalletTransactions})
+
+export const getLatestTransaction = (org?: string) =>
+  axios.get(`/api/web-wallet/last-transactions/${org}`, { decoder: t.array(Transaction) })
 
 export const getGetOrganisationWallets = (org?: string) =>
   axios.get(`/api/web-wallet/wallets/${org}`, { decoder: Wallets, params: { itemsPerPage: 20 } })

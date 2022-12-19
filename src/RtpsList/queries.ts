@@ -8,6 +8,8 @@ import {
   addRtp,
   createRtp,
   getGetOrganisationWallets,
+  getLatestTransaction,
+  getTransactionsByWallet,
 } from './api'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { taskEither, task, either } from 'fp-ts'
@@ -28,6 +30,14 @@ export const useGetRoutineTransactionPolicies = (nymID: string, req: PaginationR
     keepPreviousData: true,
   })
 
+export const useGetLatestTransactions = () => {
+  const org = useOrganization()
+
+  return useQuery(['latestTransactions', org], pipe(getLatestTransaction(org?.name), throwLeft), {
+    enabled: !!org,
+  })
+}
+
 export const useGetOrganisationWallets = () => {
   const org = useOrganization()
 
@@ -35,6 +45,9 @@ export const useGetOrganisationWallets = () => {
     enabled: !!org,
   })
 }
+
+export const useGetTransactionsByWallet = (nymId: string) =>
+  useQuery(['walletTransactions', nymId], pipe(getTransactionsByWallet(nymId), throwLeft))
 
 export const useGetRoutineTransactionPolicyById = (nymID: string, id: number) =>
   useQuery(['rtp', nymID, id], pipe(getRtp(nymID, id), throwLeft))

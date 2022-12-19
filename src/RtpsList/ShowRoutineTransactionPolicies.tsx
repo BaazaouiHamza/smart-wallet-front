@@ -8,6 +8,7 @@ import { RtpsList } from './RtpsList'
 export const ShowRoutineTransactionPolicies: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState<boolean>(false)
   const organizationWallets = useGetOrganisationWallets()
+  console.log(organizationWallets)
 
   if (organizationWallets.isError) {
     return <p>Something went Wrong</p>
