@@ -10,3 +10,4 @@ package-lock.json
 /.env
 /tags
 .parcel-cache/
+.npmrc
